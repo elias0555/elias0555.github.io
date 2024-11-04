@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ShmupMarine - Project Details">
+    <title>ShmupMarine - Project Details</title>
+    <link rel="stylesheet" href="echoesbelowstyle.css"> <!-- Link to the same stylesheet -->
+
+</head>
+<body>
+
+    <!-- Header with Navigation -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#project-overview">Overview</a></li>
+                <li><a href="#technical-details">Technical Details</a></li>
+                <li><a href="#gallery">Gallery</a></li>
+            </ul>
+        </nav>
+        <h1>ShmupMarine</h1>
+        <p>Shoot Them Up Game - C# & Godot</p>
+    </header>
+
+    <!-- Project Overview Section -->
+    <section id="project-overview">
+        <h2>Project Overview</h2>
+        <p>"ShmupMarine" is a thrilling shoot-them-up game that challenges players to defeat waves of enemies while navigating complex patterns. Created using <span class="code-skill">C#</span> and <span class="editor-skill">Godot</span>, this project emphasizes enemy AI behavior and engaging gameplay mechanics.</p>
+    </section>
+
+    <!-- Technical Details Section -->
+    <section id="technical-details">
+        <h2>Technical Details</h2>
+
+        <!-- Enemy AI -->
+        <div class="feature">
+            <h3>Enemy AI</h3>
+            <p>The enemy AI is designed to challenge players with varying attack patterns and behaviors, ensuring a unique gameplay experience.</p>
+            <ul>
+                <li>Utilizes finite state machines to control enemy states (patrol, attack, retreat).</li>
+                <li>AI behavior trees manage decision-making processes for strategic enemy movements.</li>
+            </ul>
+        </div>
+
+        <!-- Bullet Patterns -->
+        <div class="feature">
+            <h3>Bullet Patterns</h3>
+            <p>Players face dynamic bullet patterns that increase in complexity as the game progresses, keeping the gameplay engaging.</p>
+            <ul>
+                <li>Implemented a system to randomize bullet trajectories for unpredictability.</li>
+                <li>Different bullet types with varying speeds and effects add depth to combat.</li>
+            </ul>
+        </div>
+
+        <!-- Boss Design -->
+        <div class="feature">
+            <h3>Boss Design</h3>
+            <p>Each boss fight introduces unique mechanics and strategies, requiring players to adapt their gameplay style.</p>
+            <ul>
+                <li>Bosses have health bars and multiple attack phases, increasing difficulty over time.</li>
+                <li>Visual and audio cues signal boss attacks, enhancing player awareness.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery">
+        <h2>Gallery</h2>
+        <div class="project-gallery">
+            <a href="#lightbox2-1"><img src="assets/images/shmupmarine/shmupmarine_1.png" alt="Screenshot 1"></a>
+            <a href="#lightbox2-2"><img src="assets/images/shmupmarine/shmupmarine_2.png" alt="Screenshot 2"></a>
+            <a href="#lightbox2-3"><img src="assets/images/shmupmarine/shmupmarine_3.png" alt="Screenshot 3"></a>
+        </div>
+    
+        <!-- Lightbox for each image -->
+        <div id="lightbox2-1" class="lightbox">
+            <a href="#" class="lightbox-close">&times;</a>
+            <img src="assets/images/shmupmarine/shmupmarine_1.png" alt="Screenshot 1">
+            <button class="lightbox-nav left" data-target="#lightbox2-3">&lt;</button>
+            <button class="lightbox-nav right" data-target="#lightbox2-2">&gt;</button>
+        </div>
+        <div id="lightbox2-2" class="lightbox">
+            <a href="#" class="lightbox-close">&times;</a>
+            <img src="assets/images/shmupmarine/shmupmarine_2.png" alt="Screenshot 2">
+            <button class="lightbox-nav left" data-target="#lightbox2-1">&lt;</button>
+            <button class="lightbox-nav right" data-target="#lightbox2-3">&gt;</button>
+        </div>
+        <div id="lightbox2-3" class="lightbox">
+            <a href="#" class="lightbox-close">&times;</a>
+            <img src="assets/images/shmupmarine/shmupmarine_3.png" alt="Screenshot 3">
+            <button class="lightbox-nav left" data-target="#lightbox2-2">&lt;</button>
+            <button class="lightbox-nav right" data-target="#lightbox2-1">&gt;</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Elias OSBORN SALINAS - All rights reserved</p>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script>
+        // Function to close the lightbox
+        function closeLightbox(lightbox) {
+            lightbox.style.display = 'none';
+        }
+    
+        // Function to open the lightbox
+        function openLightbox(lightboxId) {
+            const lightbox = document.querySelector(lightboxId);
+            lightbox.style.display = 'flex';
+        }
+    
+        // Event listener for close buttons
+        const closeButtons = document.querySelectorAll('.lightbox-close');
+        closeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                closeLightbox(this.parentElement);
+            });
+        });
+    
+        // Event listeners for gallery links
+        const galleryLinks = document.querySelectorAll('.project-gallery a');
+        galleryLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent default anchor behavior
+                const lightboxId = this.getAttribute('href'); // Get lightbox ID
+                openLightbox(lightboxId); // Open the lightbox
+            });
+        });
+    
+        // Event listeners for arrow navigation
+        const navButtons = document.querySelectorAll('.lightbox-nav');
+        navButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const currentLightbox = this.closest('.lightbox');
+                const targetId = this.getAttribute('data-target'); // Get the target lightbox ID
+                closeLightbox(currentLightbox); // Hide current lightbox
+                openLightbox(targetId); // Show target lightbox
+            });
+        });
+    </script>
+    </body>
+    </html>

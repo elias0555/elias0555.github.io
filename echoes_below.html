@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Echoes Below - Project Details">
+    <title>Echoes Below - Project Details</title>
+    <link rel="stylesheet" href="echoesbelowstyle.css"> <!-- Link to the same stylesheet -->
+</head>
+<body>
+
+    <!-- Header with Navigation -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#project-overview">Overview</a></li>
+                <li><a href="#technical-details">Technical Details</a></li>
+                <li><a href="#gallery">Gallery</a></li>
+            </ul>
+        </nav>
+        <h1>Echoes Below</h1>
+        <p>3D Horror Game - Unity & Blender</p>
+    </header>
+
+    <!-- Project Overview Section -->
+    <section id="project-overview">
+        <h2>Project Overview</h2>
+        <p>"Echoes Below" is an immersive 3D horror game that challenges players with puzzles, exploration, and atmospheric storytelling. Created using <span class="code-skill">Unity</span> and <span class="asset-skill">Blender</span>, this project combines technical mechanics like inventory systems and interactable objects with a focus on suspenseful design.</p>
+    </section>
+
+    <!-- Technical Details Section -->
+    <section id="technical-details">
+        <h2>Technical Details</h2>
+
+        <!-- Inventory System -->
+        <div class="feature">
+            <h3>Inventory System</h3>
+            <p>The inventory system allows players to collect and store items essential for progression. Each item has attributes like name, description, and icon, managed within a dictionary for quick access.</p>
+            <ul>
+                <li>Built with C# hashs & lists to handle item attributes and quantities.</li>
+                <li>Uses Unity’s UI components to dynamically display items as they are collected.</li>
+                <li>Items can be interacted with in real-time via raycasting.</li>
+            </ul>
+        </div>
+
+        <!-- Door & Key Logic -->
+        <div class="feature">
+            <h3>Door and Key System</h3>
+            <p>Doors require specific keys to open, enhancing exploration. This system uses Animator components for smooth door animations and a tagging system for easy object identification.</p>
+            <ul>
+                <li>Custom key-lock mechanism that checks the player’s inventory for the correct key.</li>
+                <li>Doors are animated with Unity’s Animator component, complete with audio cues.</li>
+                <li>Locks can be added or removed to modify difficulty dynamically.</li>
+            </ul>
+        </div>
+
+        <!-- Interactable Objects System -->
+        <div class="feature">
+            <h3>Interactable Objects System</h3>
+            <p>Players interact with various objects throughout the environment using a custom tagging system and raycasting. Scriptable events handle unique object responses.</p>
+            <ul>
+                <li>Tag-based system identifies objects in the player’s line of sight.</li>
+                <li>Custom scriptable events allow each object to respond with different actions.</li>
+                <li>Real-time prompts guide players to discover interactable elements.</li>
+            </ul>
+        </div>
+
+        <!-- Objective & Subtitles System -->
+        <div class="feature">
+            <h3>Objective & Subtitles System</h3>
+            <p>The objectives and subtitle system enhances immersion, guiding players through their journey. Objectives update in real-time, while subtitles sync with game audio for narration.</p>
+            <ul>
+                <li>Objective queue system manages player tasks with clear updates.</li>
+                <li>Text is used for subtitles, with precise timing for audio synchronization.</li>
+                <li>Objectives and subtitles add to the narrative experience, keeping players engaged.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="gallery">
+        <h2>Gallery</h2>
+        <div class="project-gallery">
+            <a href="#lightbox1"><img src="assets/images/echoes_below/echoes_below_1.png" alt="Screenshot 1"></a>
+            <a href="#lightbox2"><img src="assets/images/echoes_below/echoes_below_2.png" alt="Screenshot 2"></a>
+            <a href="#lightbox3"><img src="assets/images/echoes_below/echoes_below_3.png" alt="Screenshot 3"></a>
+        </div>
+    
+        <!-- Lightbox for each image -->
+        <div id="lightbox1" class="lightbox">
+            <button class="lightbox-close">&times;</button>
+            <button class="lightbox-nav left" data-target="#lightbox3">&lt;</button>
+            <img src="assets/images/echoes_below/echoes_below_1.png" alt="Screenshot 1">
+            <button class="lightbox-nav right" data-target="#lightbox2">&gt;</button>
+        </div>
+        <div id="lightbox2" class="lightbox">
+            <button class="lightbox-close">&times;</button>
+            <button class="lightbox-nav left" data-target="#lightbox1">&lt;</button>
+            <img src="assets/images/echoes_below/echoes_below_2.png" alt="Screenshot 2">
+            <button class="lightbox-nav right" data-target="#lightbox3">&gt;</button>
+        </div>
+        <div id="lightbox3" class="lightbox">
+            <button class="lightbox-close">&times;</button>
+            <button class="lightbox-nav left" data-target="#lightbox2">&lt;</button>
+            <img src="assets/images/echoes_below/echoes_below_3.png" alt="Screenshot 3">
+            <button class="lightbox-nav right" data-target="#lightbox1">&gt;</button>
+        </div>
+    </section>
+    
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Elias OSBORN SALINAS - All rights reserved</p>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script>
+        // Function to close the lightbox
+        function closeLightbox(lightbox) {
+            lightbox.style.display = 'none';
+        }
+    
+        // Function to open the lightbox
+        function openLightbox(lightboxId) {
+            const lightbox = document.querySelector(lightboxId);
+            lightbox.style.display = 'flex';
+        }
+    
+        // Event listener for close buttons
+        const closeButtons = document.querySelectorAll('.lightbox-close');
+        closeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                closeLightbox(this.parentElement);
+            });
+        });
+    
+        // Event listeners for gallery links
+        const galleryLinks = document.querySelectorAll('.project-gallery a');
+        galleryLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent default anchor behavior
+                const lightboxId = this.getAttribute('href'); // Get lightbox ID
+                openLightbox(lightboxId); // Open the lightbox
+            });
+        });
+    
+        // Event listeners for arrow navigation
+        const navButtons = document.querySelectorAll('.lightbox-nav');
+        navButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const currentLightbox = this.closest('.lightbox');
+                const targetId = this.getAttribute('data-target'); // Get the target lightbox ID
+                closeLightbox(currentLightbox); // Hide current lightbox
+                openLightbox(targetId); // Show target lightbox
+            });
+        });
+    </script>
+    </body>
+    </html>

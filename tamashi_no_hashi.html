@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tamashi no Hashi - Project Details">
+    <title>Tamashi no Hashi - Project Details</title>
+    <link rel="stylesheet" href="echoesbelowstyle.css"> <!-- Link to the same stylesheet -->
+
+</head>
+<body>
+
+    <!-- Header with Navigation -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#project-overview">Overview</a></li>
+                <li><a href="#technical-details">Technical Details</a></li>
+                <li><a href="#gallery">Gallery</a></li>
+            </ul>
+        </nav>
+        <h1>Tamashi no Hashi</h1>
+        <p>Sokoban Puzzle Game - C# & Godot</p>
+    </header>
+
+    <!-- Project Overview Section -->
+    <section id="project-overview">
+        <h2>Project Overview</h2>
+        <p>"Tamashi no Hashi" is a collaborative Sokoban puzzle game that challenges players to solve intricate puzzles through strategic item placement and movement. Developed with <span class="code-skill">C#</span> and <span class="editor-skill">Godot</span>, the game emphasizes teamwork and spatial reasoning.</p>
+    </section>
+
+    <!-- Technical Details Section -->
+    <section id="technical-details">
+        <h2>Technical Details</h2>
+
+        <!-- 2D Grid-Based Movement -->
+        <div class="feature">
+            <h3>2D Grid-Based Movement</h3>
+            <p>The game features a grid-based movement system, allowing players to push and pull items within a fixed grid layout.</p>
+            <ul>
+                <li>Player movement is constrained to the grid, ensuring precise control.</li>
+                <li>Collision detection is optimized to prevent unwanted item movement.</li>
+            </ul>
+        </div>
+
+        <!-- Asset Creation -->
+        <div class="feature">
+            <h3>Asset Creation</h3>
+            <p>All assets were created in-house to ensure a cohesive art style and experience throughout the game.</p>
+            <ul>
+                <li>Utilized <span class="asset-skill">Blender</span> for 3D modeling and animation.</li>
+                <li>Textures and UI elements were designed with <span class="asset-skill">Photoshop</span>.</li>
+            </ul>
+        </div>
+
+        <!-- Git Fundamentals -->
+        <div class="feature">
+            <h3>Git Fundamentals</h3>
+            <p>This project was a group effort, utilizing Git for version control to manage collaboration and maintain project integrity.</p>
+            <ul>
+                <li>Implemented branching strategies to facilitate feature development.</li>
+                <li>Regular merges and pull requests maintained a clean codebase.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery">
+        <h2>Gallery</h2>
+        <div class="project-gallery">
+            <a href="#lightbox3-1"><img src="assets/images/tamashinohashi/tamashi_no_hashi_1.png" alt="Screenshot 1"></a>
+            <a href="#lightbox3-2"><img src="assets/images/tamashinohashi/tamashi_no_hashi_2.png" alt="Screenshot 2"></a>
+            <a href="#lightbox3-3"><img src="assets/images/tamashinohashi/tamashi_no_hashi_3.png" alt="Screenshot 3"></a>
+        </div>
+    
+        <!-- Lightbox for each image -->
+        <div id="lightbox3-1" class="lightbox">
+            <a href="#" class="lightbox-close">&times;</a>
+            <img src="assets/images/tamashinohashi/tamashi_no_hashi_1.png" alt="Screenshot 1">
+            <button class="lightbox-nav left" data-target="#lightbox3-3">&lt;</button>
+            <button class="lightbox-nav right" data-target="#lightbox3-2">&gt;</button>
+        </div>
+        <div id="lightbox3-2" class="lightbox">
+            <a href="#" class="lightbox-close">&times;</a>
+            <img src="assets/images/tamashinohashi/tamashi_no_hashi_2.png" alt="Screenshot 2">
+            <button class="lightbox-nav left" data-target="#lightbox3-1">&lt;</button>
+            <button class="lightbox-nav right" data-target="#lightbox3-3">&gt;</button>
+        </div>
+        <div id="lightbox3-3" class="lightbox">
+            <a href="#" class="lightbox-close">&times;</a>
+            <img src="assets/images/tamashinohashi/tamashi_no_hashi_3.png" alt="Screenshot 3">
+            <button class="lightbox-nav left" data-target="#lightbox3-2">&lt;</button>
+            <button class="lightbox-nav right" data-target="#lightbox3-1">&gt;</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Elias OSBORN SALINAS - All rights reserved</p>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script>
+        // Function to close the lightbox
+        function closeLightbox(lightbox) {
+            lightbox.style.display = 'none';
+        }
+    
+        // Function to open the lightbox
+        function openLightbox(lightboxId) {
+            const lightbox = document.querySelector(lightboxId);
+            lightbox.style.display = 'flex';
+        }
+    
+        // Event listener for close buttons
+        const closeButtons = document.querySelectorAll('.lightbox-close');
+        closeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                closeLightbox(this.parentElement);
+            });
+        });
+    
+        // Event listeners for gallery links
+        const galleryLinks = document.querySelectorAll('.project-gallery a');
+        galleryLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent default anchor behavior
+                const lightboxId = this.getAttribute('href'); // Get lightbox ID
+                openLightbox(lightboxId); // Open the lightbox
+            });
+        });
+    
+        // Event listeners for arrow navigation
+        const navButtons = document.querySelectorAll('.lightbox-nav');
+        navButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const currentLightbox = this.closest('.lightbox');
+                const targetId = this.getAttribute('data-target'); // Get the target lightbox ID
+                closeLightbox(currentLightbox); // Hide current lightbox
+                openLightbox(targetId); // Show target lightbox
+            });
+        });
+    </script>
+    </body>
+    </html>

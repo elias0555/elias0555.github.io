@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Just Stop! - Project Details">
+    <title>Just Stop! - Project Details</title>
+    <link rel="stylesheet" href="echoesbelowstyle.css"> <!-- Link to the same stylesheet -->
+
+</head>
+<body>
+
+    <!-- Header with Navigation -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#project-overview">Overview</a></li>
+                <li><a href="#technical-details">Technical Details</a></li>
+                <li><a href="#gallery">Gallery</a></li>
+            </ul>
+        </nav>
+        <h1>Just Stop!</h1>
+        <p>One Button Game - C# & Godot</p>
+    </header>
+
+    <!-- Project Overview Section -->
+    <section id="project-overview">
+        <h2>Project Overview</h2>
+        <p>"Just Stop!" is an innovative one-button multiplayer game where players must respond quickly to on-screen prompts. Developed using <span class="code-skill">C#</span> and <span class="editor-skill">Godot</span>, the game fosters competition and quick reflexes.</p>
+    </section>
+
+    <!-- Technical Details Section -->
+    <section id="technical-details">
+        <h2>Technical Details</h2>
+
+        <!-- Local Multiplayer System -->
+        <div class="feature">
+            <h3>Local Multiplayer System</h3>
+            <p>The game supports local multiplayer gameplay, allowing friends to compete in real-time.</p>
+            <ul>
+                <li>Implemented player input detection to capture simultaneous button presses.</li>
+                <li>Score tracking for each player with dynamic UI updates.</li>
+            </ul>
+        </div>
+
+        <!-- Random Prompt Generation -->
+        <div class="feature">
+            <h3>Random Prompt Generation</h3>
+            <p>Each round features a randomly generated prompt that players must respond to quickly.</p>
+            <ul>
+                <li>Utilized arrays to store and randomly select prompts for variety.</li>
+                <li>Game timer ensures rapid pace, increasing excitement.</li>
+            </ul>
+        </div>
+
+        <!-- Scoreboard System -->
+        <div class="feature">
+            <h3>Scoreboard System</h3>
+            <p>The scoreboard tracks player scores and displays results at the end of each round.</p>
+            <ul>
+                <li>Implemented a leaderboard to showcase high scores over multiple rounds.</li>
+                <li>Real-time score updates maintain competitive spirit among players.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery">
+        <h2>Gallery</h2>
+        <div class="project-gallery">
+            <a href="#lightbox1-1"><img src="assets/images/juststop/just_stop_1.png" alt="Screenshot 1"></a>
+            <a href="#lightbox1-2"><img src="assets/images/juststop/just_stop_2.png" alt="Screenshot 2"></a>
+            <a href="#lightbox1-3"><img src="assets/images/juststop/just_stop_3.png" alt="Screenshot 3"></a>
+        </div>
+    
+        <!-- Lightbox for each image -->
+        <div id="lightbox1-1" class="lightbox">
+            <a href="#" class="lightbox-close">&times;</a>
+            <img src="assets/images/juststop/just_stop_1.png" alt="Screenshot 1">
+            <button class="lightbox-nav left" data-target="#lightbox1-3">&lt;</button>
+            <button class="lightbox-nav right" data-target="#lightbox1-2">&gt;</button>
+        </div>
+        <div id="lightbox1-2" class="lightbox">
+            <a href="#" class="lightbox-close">&times;</a>
+            <img src="assets/images/juststop/just_stop_2.png" alt="Screenshot 2">
+            <button class="lightbox-nav left" data-target="#lightbox1-1">&lt;</button>
+            <button class="lightbox-nav right" data-target="#lightbox1-3">&gt;</button>
+        </div>
+        <div id="lightbox1-3" class="lightbox">
+            <a href="#" class="lightbox-close">&times;</a>
+            <img src="assets/images/juststop/just_stop_3.png" alt="Screenshot 3">
+            <button class="lightbox-nav left" data-target="#lightbox1-2">&lt;</button>
+            <button class="lightbox-nav right" data-target="#lightbox1-1">&gt;</button>
+        </div>
+    </section>
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Elias OSBORN SALINAS - All rights reserved</p>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script>
+        // Function to close the lightbox
+        function closeLightbox(lightbox) {
+            lightbox.style.display = 'none';
+        }
+    
+        // Function to open the lightbox
+        function openLightbox(lightboxId) {
+            const lightbox = document.querySelector(lightboxId);
+            lightbox.style.display = 'flex';
+        }
+    
+        // Event listener for close buttons
+        const closeButtons = document.querySelectorAll('.lightbox-close');
+        closeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                closeLightbox(this.parentElement);
+            });
+        });
+    
+        // Event listeners for gallery links
+        const galleryLinks = document.querySelectorAll('.project-gallery a');
+        galleryLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent default anchor behavior
+                const lightboxId = this.getAttribute('href'); // Get lightbox ID
+                openLightbox(lightboxId); // Open the lightbox
+            });
+        });
+    
+        // Event listeners for arrow navigation
+        const navButtons = document.querySelectorAll('.lightbox-nav');
+        navButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const currentLightbox = this.closest('.lightbox');
+                const targetId = this.getAttribute('data-target'); // Get the target lightbox ID
+                closeLightbox(currentLightbox); // Hide current lightbox
+                openLightbox(targetId); // Show target lightbox
+            });
+        });
+    </script>
+    </body>
+    </html>
