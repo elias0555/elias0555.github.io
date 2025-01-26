@@ -51,6 +51,7 @@ header {
     padding: 50px 20px;
     background-color: #ffffff;
     text-align: center;
+    margin-bottom: 30px; /* Consistent margin between sections */
 }
 
     #project-overview p, #technical-details p {
@@ -63,6 +64,27 @@ header {
     #project-overview p, #technical-details p {
         max-width: 600px;
     }
+}
+
+/* Video Preview Section */
+#video-preview {
+    text-align: center;
+    margin: 40px auto;
+    max-width: 1200px; /* Set a max width for better control */
+}
+
+#video-preview video {
+    width: 80%; /* Adjust percentage to control width */
+    max-width: 600px; /* Set maximum width for smaller size */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#video-preview p {
+    margin-top: 1rem;
+    font-size: 1rem;
+    color: #666;
 }
 
 /* Feature Styling */
@@ -81,7 +103,7 @@ header {
     .feature ul {
         list-style-type: disc;
         padding-left: 20px;
-    }
+}
 
 /* Gallery Section */
 .project-gallery {
@@ -103,7 +125,7 @@ header {
         .project-gallery img:hover {
             transform: translateY(-10px);
             box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-        }
+}
 
 /* Lightbox styling */
 .lightbox {
