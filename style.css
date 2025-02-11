@@ -9,7 +9,12 @@ body {
 h1, h2, h3 {
     color: #a1a1a1;
 }
-
+/* Style des titres de section */
+h2 {
+    font-weight: bold; /* Met en gras */
+    color: #616161; /* Change la couleur en noir */
+    text-decoration: underline; /* Souligne */
+}
 p {
     color: #666;
 }
@@ -63,6 +68,23 @@ header {
     #about p {
         max-width: 600px;
     }
+}
+
+/* Featured Projects Section */
+#featured-project {
+    text-align: center;
+    margin: 50px auto;
+}
+#featured-project .project {
+    display: inline-block;
+    max-width: 800px;
+    text-align: center;
+}
+#featured-project img {
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    border-radius: 10px;
 }
 
 /* Projects Section */
