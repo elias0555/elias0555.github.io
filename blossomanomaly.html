@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tamashi no Hashi - Project Details">
+    <title>Tamashi no Hashi - Project Details</title>
+    <link rel="stylesheet" href="echoesbelowstyle.css"> <!-- Link to the same stylesheet -->
+
+</head>
+<body>
+
+    <!-- Header with Navigation -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#project-overview">Overview</a></li>
+                <li><a href="#technical-details">Technical Details</a></li>
+                <li><a href="#gallery">Gallery</a></li>
+            </ul>
+        </nav>
+        <h1>Blossom Anomaly</h1>
+        <p>Platformer genre game - C# & Unity</p>
+    </header>
+
+    <!-- Project Overview Section -->
+    <section id="project-overview">
+        <h2>Project Overview</h2>
+        <p>"Blossom Anomaly" delivers fast-paced platforming with a one-of-a-kind, physics-driven grapple hook mechanic, unlocking endless movement possibilities for players to master.</p>
+    </section>
+
+    <!-- Video Preview Section -->
+    <section id="video-preview">
+        <h2>Gameplay Video</h2>
+        <video controls>
+            <source src="assets/videos/blossom_anomaly.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <p>Experience the mechanics of "Blossom Anomaly" at the highest level in this gameplay showcase.</p>
+    </section>
+
+    <!-- Technical Details Section -->
+    <section id="technical-details">
+        <h2>Technical Details</h2>
+
+        <!-- 2D Grid-Based Movement -->
+        <div class="feature">
+            <h3>Level Design</h3>
+            <p>The game showcases two different levels with two different scales of difficulty</p>
+            <ul>
+                <li>The tutorial is seamlessly integrated into the first level to keep the player immersed.</li>
+                <li>Each level ramps up in difficulty, providing an ever-growing challenge to keep players fully engaged.</li>
+            </ul>
+        </div>
+
+        <!-- Asset Creation -->
+        <div class="feature">
+            <h3>Collision Handling</h3>
+            <p>The collision system was built entirely using mathematical raycast logic to ensure precise, responsive, and controlled interactions.</p>
+            <ul>
+                <li>Implemented eight-directional collision handling using Unity’s Physics class and custom raycast logic for precise movement control.</li>
+                <li>Player position is dynamically recalculated on collision to maintain consistent physics behavior and movement flow.</span>.</li>
+            </ul>
+        </div>
+
+        <!-- Git Fundamentals -->
+        <div class="feature">
+            <h3>Camera custom behaviour</h3>
+            <p>The camera is designed to dynamically adjust based on the player’s velocity and movement direction, ensuring smooth and responsive tracking.</p>
+            <ul>
+                <li>The camera employs smooth damping to ensure clean and fluid movement throughout.</li>
+                <li>The camera adjusts in real-time based on the player’s velocity and direction, using dynamic conditions to ensure precise tracking.</li>
+                <li>The camera dynamically adapts to the player, using conditions that check velocity and direction for real-time adjustments.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery">
+        <h2>Gallery</h2>
+        <div class="project-gallery">
+            <a href="#lightbox3-1"><img src="assets/images/blossomanomaly/blossom_anomaly_02.png" alt="Screenshot 1"></a>
+            <a href="#lightbox3-2"><img src="assets/images/blossomanomaly/blossom_anomaly_02.png" alt="Screenshot 2"></a>
+            <a href="#lightbox3-3"><img src="assets/images/blossomanomaly/blossom_anomaly_03.png" alt="Screenshot 3"></a>
+            <a href="#lightbox3-4"><img src="assets/images/blossomanomaly/blossom_anomaly_04.png" alt="Screenshot 4"></a>
+            <a href="#lightbox3-6"><img src="assets/images/blossomanomaly/blossom_anomaly_06.png" alt="Screenshot 6"></a>
+            <a href="#lightbox3-7"><img src="assets/images/blossomanomaly/blossom_anomaly_07.png" alt="Screenshot 7"></a>
+            <a href="#lightbox3-8"><img src="assets/images/blossomanomaly/blossom_anomaly_08.png" alt="Screenshot 8"></a>
+            <a href="#lightbox3-9"><img src="assets/images/blossomanomaly/blossom_anomaly_09.png" alt="Screenshot 9"></a>
+            <a href="#lightbox3-10"><img src="assets/images/blossomanomaly/blossom_anomaly_10.png" alt="Screenshot 10"></a>
+            <a href="#lightbox3-11"><img src="assets/images/blossomanomaly/blossom_anomaly_11.png" alt="Screenshot 11"></a>
+            <a href="#lightbox3-12"><img src="assets/images/blossomanomaly/blossom_anomaly_12.png" alt="Screenshot 12"></a>
+        </div>
+    
+        <!-- Lightbox for each image -->
+        <div id="lightbox3-1" class="lightbox">
+            <a href="#" class="lightbox-close">&times;</a>
+            <img src="assets/images/blossomanomaly/blossom_anomaly_01.png" alt="Screenshot 1">
+            <button class="lightbox-nav left" data-target="#lightbox3-12">&lt;</button>
+            <button class="lightbox-nav right" data-target="#lightbox3-2">&gt;</button>
+        </div>
+        <div id="lightbox3-2" class="lightbox">
+            <a href="#" class="lightbox-close">&times;</a>
+            <img src="assets/images/blossomanomaly/blossom_anomaly_02.png" alt="Screenshot 2">
+            <button class="lightbox-nav left" data-target="#lightbox3-1">&lt;</button>
+            <button class="lightbox-nav right" data-target="#lightbox3-3">&gt;</button>
+        </div>
+        <div id="lightbox3-3" class="lightbox">
+            <a href="#" class="lightbox-close">&times;</a>
+            <img src="assets/images/blossomanomaly/blossom_anomaly_03.png" alt="Screenshot 3">
+            <button class="lightbox-nav left" data-target="#lightbox3-2">&lt;</button>
+            <button class="lightbox-nav right" data-target="#lightbox3-4">&gt;</button>
+        </div>
+        <div id="lightbox3-4" class="lightbox">
+            <a href="#" class="lightbox-close">&times;</a>
+            <img src="assets/images/blossomanomaly/blossom_anomaly_04.png" alt="Screenshot 4">
+            <button class="lightbox-nav left" data-target="#lightbox3-3">&lt;</button>
+            <button class="lightbox-nav right" data-target="#lightbox3-5">&gt;</button>
+        </div>
+        <div id="lightbox3-6" class="lightbox">
+            <a href="#" class="lightbox-close">&times;</a>
+            <img src="assets/images/blossomanomaly/blossom_anomaly_06.png" alt="Screenshot 6">
+            <button class="lightbox-nav left" data-target="#lightbox3-5">&lt;</button>
+            <button class="lightbox-nav right" data-target="#lightbox3-7">&gt;</button>
+        </div>
+        <div id="lightbox3-7" class="lightbox">
+            <a href="#" class="lightbox-close">&times;</a>
+            <img src="assets/images/blossomanomaly/blossom_anomaly_07.png" alt="Screenshot 7">
+            <button class="lightbox-nav left" data-target="#lightbox3-6">&lt;</button>
+            <button class="lightbox-nav right" data-target="#lightbox3-8">&gt;</button>
+        </div>
+        <div id="lightbox3-8" class="lightbox">
+            <a href="#" class="lightbox-close">&times;</a>
+            <img src="assets/images/blossomanomaly/blossom_anomaly_08.png" alt="Screenshot 8">
+            <button class="lightbox-nav left" data-target="#lightbox3-7">&lt;</button>
+            <button class="lightbox-nav right" data-target="#lightbox3-9">&gt;</button>
+        </div>
+        <div id="lightbox3-9" class="lightbox">
+            <a href="#" class="lightbox-close">&times;</a>
+            <img src="assets/images/blossomanomaly/blossom_anomaly_09.png" alt="Screenshot 9">
+            <button class="lightbox-nav left" data-target="#lightbox3-8">&lt;</button>
+            <button class="lightbox-nav right" data-target="#lightbox3-10">&gt;</button>
+        </div>
+        <div id="lightbox3-10" class="lightbox">
+            <a href="#" class="lightbox-close">&times;</a>
+            <img src="assets/images/blossomanomaly/blossom_anomaly_10.png" alt="Screenshot 10">
+            <button class="lightbox-nav left" data-target="#lightbox3-9">&lt;</button>
+            <button class="lightbox-nav right" data-target="#lightbox3-11">&gt;</button>
+        </div>
+        <div id="lightbox3-11" class="lightbox">
+            <a href="#" class="lightbox-close">&times;</a>
+            <img src="assets/images/blossomanomaly/blossom_anomaly_11.png" alt="Screenshot 11">
+            <button class="lightbox-nav left" data-target="#lightbox3-10">&lt;</button>
+            <button class="lightbox-nav right" data-target="#lightbox3-12">&gt;</button>
+        </div>
+        <div id="lightbox3-12" class="lightbox">
+            <a href="#" class="lightbox-close">&times;</a>
+            <img src="assets/images/blossomanomaly/blossom_anomaly_12.png" alt="Screenshot 12">
+            <button class="lightbox-nav left" data-target="#lightbox3-11">&lt;</button>
+            <button class="lightbox-nav right" data-target="#lightbox3-1">&gt;</button>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Elias OSBORN SALINAS - All rights reserved</p>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script>
+        // Function to close the lightbox
+        function closeLightbox(lightbox) {
+            lightbox.style.display = 'none';
+        }
+    
+        // Function to open the lightbox
+        function openLightbox(lightboxId) {
+            const lightbox = document.querySelector(lightboxId);
+            lightbox.style.display = 'flex';
+        }
+    
+        // Event listener for close buttons
+        const closeButtons = document.querySelectorAll('.lightbox-close');
+        closeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                closeLightbox(this.parentElement);
+            });
+        });
+    
+        // Event listeners for gallery links
+        const galleryLinks = document.querySelectorAll('.project-gallery a');
+        galleryLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent default anchor behavior
+                const lightboxId = this.getAttribute('href'); // Get lightbox ID
+                openLightbox(lightboxId); // Open the lightbox
+            });
+        });
+    
+        // Event listeners for arrow navigation
+        const navButtons = document.querySelectorAll('.lightbox-nav');
+        navButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const currentLightbox = this.closest('.lightbox');
+                const targetId = this.getAttribute('data-target'); // Get the target lightbox ID
+                closeLightbox(currentLightbox); // Hide current lightbox
+                openLightbox(targetId); // Show target lightbox
+            });
+        });
+    </script>
+    </body>
+    </html>
