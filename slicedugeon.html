@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Slice Dungeon - Project Details">
     <title>Slice Dungeon - Project Details</title>
-    <link rel="stylesheet" href="echoesbelowstyle.css"> <!-- Link to the same stylesheet -->
+    <link rel="stylesheet" href="style.css"> <!-- Link to the same stylesheet -->
 </head>
 <body>
 
@@ -91,92 +91,12 @@
             <a href="#lightbox3-6"><img src="assets/images/slice_dungeon/screenshot 5.jpg" alt="Screenshot 6"></a>
             <a href="#lightbox3-7"><img src="assets/images/slice_dungeon/screenshot 6.jpg" alt="Screenshot 7"></a>
         </div>
-
-        <!-- Lightbox for each image -->
-        <div id="lightbox3-1" class="lightbox">
-            <a href="#" class="lightbox-close">&times;</a>
-            <img src="assets/images/slice_dungeon/slice.png" alt="Screenshot 1">
-            <button class="lightbox-nav left" data-target="#lightbox3-12">&lt;</button>
-            <button class="lightbox-nav right" data-target="#lightbox3-2">&gt;</button>
-        </div>
-        <div id="lightbox3-2" class="lightbox">
-            <a href="#" class="lightbox-close">&times;</a>
-            <img src="assets/images/slice_dungeon/screenshot 2.jpg" alt="Screenshot 2">
-            <button class="lightbox-nav left" data-target="#lightbox3-1">&lt;</button>
-            <button class="lightbox-nav right" data-target="#lightbox3-3">&gt;</button>
-        </div>
-        <div id="lightbox3-3" class="lightbox">
-            <a href="#" class="lightbox-close">&times;</a>
-            <img src="assets/images/slice_dungeon/screenshot 3.jpg" alt="Screenshot 3">
-            <button class="lightbox-nav left" data-target="#lightbox3-2">&lt;</button>
-            <button class="lightbox-nav right" data-target="#lightbox3-4">&gt;</button>
-        </div>
-        <div id="lightbox3-4" class="lightbox">
-            <a href="#" class="lightbox-close">&times;</a>
-            <img src="assets/images/slice_dungeon/screenshot 4.jpg" alt="Screenshot 4">
-            <button class="lightbox-nav left" data-target="#lightbox3-3">&lt;</button>
-            <button class="lightbox-nav right" data-target="#lightbox3-5">&gt;</button>
-        </div>
-        <div id="lightbox3-6" class="lightbox">
-            <a href="#" class="lightbox-close">&times;</a>
-            <img src="assets/images/slice_dungeon/screenshot 5.jpg" alt="Screenshot 6">
-            <button class="lightbox-nav left" data-target="#lightbox3-5">&lt;</button>
-            <button class="lightbox-nav right" data-target="#lightbox3-7">&gt;</button>
-        </div>
-        <div id="lightbox3-7" class="lightbox">
-            <a href="#" class="lightbox-close">&times;</a>
-            <img src="assets/images/slice_dungeon/screenshot 6.jpg" alt="Screenshot 7">
-            <button class="lightbox-nav left" data-target="#lightbox3-6">&lt;</button>
-            <button class="lightbox-nav right" data-target="#lightbox3-8">&gt;</button>
-        </div>
     </section>
     
     <!-- Footer -->
     <footer>
         <p>&copy; 2024 Elias OSBORN SALINAS - All rights reserved</p>
     </footer>
-    
-    <!-- JavaScript -->
-    <script>
-        // Function to close the lightbox
-        function closeLightbox(lightbox) {
-            lightbox.style.display = 'none';
-        }
-    
-        // Function to open the lightbox
-        function openLightbox(lightboxId) {
-            const lightbox = document.querySelector(lightboxId);
-            lightbox.style.display = 'flex';
-        }
-    
-        // Event listener for close buttons
-        const closeButtons = document.querySelectorAll('.lightbox-close');
-        closeButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                closeLightbox(this.parentElement);
-            });
-        });
-    
-        // Event listeners for gallery links
-        const galleryLinks = document.querySelectorAll('.project-gallery a');
-        galleryLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault(); // Prevent default anchor behavior
-                const lightboxId = this.getAttribute('href'); // Get lightbox ID
-                openLightbox(lightboxId); // Open the lightbox
-            });
-        });
-    
-        // Event listeners for arrow navigation
-        const navButtons = document.querySelectorAll('.lightbox-nav');
-        navButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const currentLightbox = this.closest('.lightbox');
-                const targetId = this.getAttribute('data-target'); // Get the target lightbox ID
-                closeLightbox(currentLightbox); // Hide current lightbox
-                openLightbox(targetId); // Show target lightbox
-            });
-        });
-    </script>
-    </body>
+
+    <script src="script.js"></script>
     </html>
