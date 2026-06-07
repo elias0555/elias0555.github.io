@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Admin — Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="admin-body">
+
+    <!-- ====================== VUE CONNEXION ====================== -->
+    <div id="login-view" class="admin-center" hidden>
+        <div class="admin-card login-card">
+            <h1>Espace Admin</h1>
+            <p>Connecte-toi pour gérer tes projets.</p>
+            <button id="login-btn" class="btn btn-primary">
+                <span>Se connecter avec Google</span>
+            </button>
+            <p id="login-error" class="form-error"></p>
+        </div>
+    </div>
+
+    <!-- ====================== VUE ADMIN ====================== -->
+    <div id="admin-view" hidden>
+        <header class="admin-header">
+            <div>
+                <h1 class="admin-logo">Portfolio Admin</h1>
+                <span id="user-label" class="admin-user"></span>
+            </div>
+            <div class="admin-header-actions">
+                <a href="index.html" class="btn btn-ghost" target="_blank">Voir le site ↗</a>
+                <button id="logout-btn" class="btn btn-ghost">Déconnexion</button>
+            </div>
+        </header>
+
+        <!-- Bandeau d'aide UID (affiché tant que OWNER_UID n'est pas configuré) -->
+        <div id="uid-banner" class="admin-banner" hidden></div>
+
+        <main class="admin-layout">
+            <!-- Liste des projets -->
+            <aside class="admin-sidebar">
+                <div class="sidebar-head">
+                    <h2>Projets</h2>
+                    <button id="new-btn" class="btn btn-primary btn-sm">+ Nouveau</button>
+                </div>
+                <button id="seed-btn" class="btn btn-ghost btn-sm btn-block">
+                    ⬇ Importer mes projets existants
+                </button>
+                <ul id="project-list" class="project-list-admin"></ul>
+            </aside>
+
+            <!-- Formulaire -->
+            <section class="admin-form-wrap">
+                <form id="project-form" class="admin-form" hidden>
+                    <div class="form-toolbar">
+                        <h2 id="form-title">Nouveau projet</h2>
+                        <div>
+                            <button type="button" id="delete-btn" class="btn btn-danger btn-sm" hidden>Supprimer</button>
+                            <button type="submit" class="btn btn-primary btn-sm">💾 Enregistrer</button>
+                        </div>
+                    </div>
+
+                    <p id="form-status" class="form-status"></p>
+
+                    <!-- Champs principaux -->
+                    <div class="form-grid">
+                        <label class="field">
+                            <span>Titre *</span>
+                            <input type="text" id="f-title" required placeholder="Mon Super Jeu">
+                        </label>
+                        <label class="field">
+                            <span>Slug (URL) *</span>
+                            <input type="text" id="f-slug" required placeholder="mon-super-jeu" pattern="[a-z0-9\-]+">
+                        </label>
+                    </div>
+
+                    <label class="field">
+                        <span>Sous-titre (en-tête de la page projet)</span>
+                        <input type="text" id="f-subtitle" placeholder="Platformer - C# & Unity">
+                    </label>
+
+                    <label class="field">
+                        <span>Accroche (petit texte sous les tags, sur la carte)</span>
+                        <input type="text" id="f-genre" placeholder="A fast-paced platformer...">
+                    </label>
+
+                    <!-- Tags / compétences -->
+                    <div class="field">
+                        <span>Compétences / Tags</span>
+                        <div id="tag-presets" class="tag-presets"></div>
+                        <div class="tag-custom">
+                            <select id="tag-type">
+                                <option value="code-skill">Langage / Code</option>
+                                <option value="editor-skill">Moteur / Éditeur</option>
+                                <option value="asset-skill">Création d'assets</option>
+                                <option value="tool-skill">Outil</option>
+                            </select>
+                            <input type="text" id="tag-custom-input" placeholder="Ajouter un tag perso…">
+                            <button type="button" id="tag-add-btn" class="btn btn-ghost btn-sm">+ Ajouter</button>
+                        </div>
+                        <div id="tag-selected" class="tag-selected"></div>
+                    </div>
+
+                    <!-- Points clés (carte) -->
+                    <label class="field">
+                        <span>Points clés de la carte (un par ligne)</span>
+                        <textarea id="f-bullets" rows="3" placeholder="Advanced Level Design&#10;Custom collision logic"></textarea>
+                    </label>
+
+                    <!-- Miniature -->
+                    <div class="field">
+                        <span>Miniature (image de la carte) *</span>
+                        <div id="thumb-drop" class="dropzone">
+                            <input type="file" id="thumb-input" accept="image/*" hidden>
+                            <div id="thumb-preview" class="thumb-preview"></div>
+                            <p class="dropzone-hint">Clique ou glisse une image ici</p>
+                        </div>
+                    </div>
+
+                    <!-- Overview -->
+                    <label class="field">
+                        <span>Description complète (page projet)</span>
+                        <textarea id="f-overview" rows="4" placeholder="Description détaillée du projet…"></textarea>
+                    </label>
+
+                    <!-- Vidéo YouTube -->
+                    <label class="field">
+                        <span>Vidéo YouTube (lien ou ID)</span>
+                        <input type="text" id="f-youtube" placeholder="https://youtu.be/XXXXXXXXXXX">
+                    </label>
+
+                    <!-- Détails techniques (features) -->
+                    <div class="field">
+                        <div class="field-head">
+                            <span>Détails techniques</span>
+                            <button type="button" id="add-feature-btn" class="btn btn-ghost btn-sm">+ Bloc</button>
+                        </div>
+                        <div id="features-container" class="features-container"></div>
+                    </div>
+
+                    <!-- Galerie -->
+                    <div class="field">
+                        <span>Galerie (captures d'écran)</span>
+                        <div id="gallery-drop" class="dropzone">
+                            <input type="file" id="gallery-input" accept="image/*" multiple hidden>
+                            <p class="dropzone-hint">Clique ou glisse plusieurs images ici</p>
+                        </div>
+                        <div id="gallery-preview" class="gallery-preview"></div>
+                    </div>
+
+                    <!-- Options -->
+                    <div class="form-grid">
+                        <label class="field field-inline">
+                            <input type="checkbox" id="f-featured">
+                            <span>Projet mis en avant (Featured)</span>
+                        </label>
+                        <label class="field">
+                            <span>Ordre d'affichage</span>
+                            <input type="number" id="f-order" value="0" min="0">
+                        </label>
+                    </div>
+
+                    <div class="form-footer">
+                        <button type="button" id="cancel-btn" class="btn btn-ghost btn-sm">Annuler</button>
+                        <button type="submit" class="btn btn-primary">💾 Enregistrer le projet</button>
+                    </div>
+                </form>
+
+                <div id="form-placeholder" class="form-placeholder">
+                    <p>← Sélectionne un projet à modifier, ou crée-en un nouveau.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Overlay de chargement -->
+    <div id="loading-overlay" class="loading-overlay" hidden>
+        <div class="spinner"></div>
+        <p id="loading-text">Chargement…</p>
+    </div>
+
+    <script type="module" src="js/admin.js"></script>
+</body>
+</html>

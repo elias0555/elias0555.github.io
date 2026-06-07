@@ -1,0 +1,15 @@
+# Outils locaux Claude Code (serveur de preview, config de lancement)
+.claude/
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Éditeurs
+.vscode/
+.idea/
+
+# Logs / dépendances éventuelles
+*.log
+node_modules/
