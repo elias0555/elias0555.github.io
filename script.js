@@ -63,6 +63,7 @@ export function initLightbox() {
     const thumb = document.createElement('img');
     thumb.src = resolveSrc(link);
     thumb.className = 'thumb';
+    thumb.loading = 'lazy';
     thumb.dataset.index = index;
     thumb.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -70,6 +71,9 @@ export function initLightbox() {
     });
     thumbContainer.appendChild(thumb);
   });
+
+  // Précharge TOUTES les images plein écran → navigation instantanée (plus de flash)
+  galleryLinks.forEach(link => { const im = new Image(); im.src = resolveSrc(link); });
 
   // Ouverture
   galleryLinks.forEach((link, index) => {
@@ -93,23 +97,20 @@ export function initLightbox() {
     if (index >= galleryLinks.length) index = 0;
     currentImgIndex = index;
 
-    const src = resolveSrc(galleryLinks[index]);
+    // Échange immédiat (les images sont préchargées → instantané)
+    lightboxImg.src = resolveSrc(galleryLinks[index]);
 
-    lightboxImg.style.opacity = 0.5;
-    lightboxImg.style.transform = "scale(0.95)";
+    // Petit "pop" non bloquant (relance l'animation à chaque switch)
+    lightboxImg.classList.remove('swap');
+    void lightboxImg.offsetWidth;            // force un reflow
+    lightboxImg.classList.add('swap');
 
-    setTimeout(() => {
-      lightboxImg.src = src;
-      lightboxImg.style.opacity = 1;
-      lightboxImg.style.transform = "scale(1)";
+    const originalImg = galleryLinks[index].querySelector('img');
+    captionText.textContent = originalImg ? originalImg.alt : "";
 
-      const originalImg = galleryLinks[index].querySelector('img');
-      captionText.textContent = originalImg ? originalImg.alt : "";
-
-      document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
-      thumbContainer.children[index].classList.add('active');
-      thumbContainer.children[index].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }, 200);
+    document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+    thumbContainer.children[index].classList.add('active');
+    thumbContainer.children[index].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   };
 
   document.getElementById('prev-btn').addEventListener('click', (e) => {

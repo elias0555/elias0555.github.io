@@ -44,6 +44,9 @@
                     <h2>Projets</h2>
                     <button id="new-btn" class="btn btn-primary btn-sm">+ Nouveau</button>
                 </div>
+                <button id="settings-btn" class="btn btn-ghost btn-sm btn-block">
+                    ⚙ Réglages du site
+                </button>
                 <button id="seed-btn" class="btn btn-ghost btn-sm btn-block">
                     ⬇ Importer mes projets existants
                 </button>
@@ -164,6 +167,55 @@
                     <div class="form-footer">
                         <button type="button" id="cancel-btn" class="btn btn-ghost btn-sm">Annuler</button>
                         <button type="submit" class="btn btn-primary">💾 Enregistrer le projet</button>
+                    </div>
+                </form>
+
+                <!-- Formulaire RÉGLAGES DU SITE (contact / CV) -->
+                <form id="settings-form" class="admin-form" hidden>
+                    <div class="form-toolbar">
+                        <h2>⚙ Réglages du site — Contact</h2>
+                        <button type="submit" class="btn btn-primary btn-sm">💾 Enregistrer</button>
+                    </div>
+                    <p id="settings-status" class="form-status"></p>
+
+                    <label class="field">
+                        <span>Email</span>
+                        <input type="email" id="s-email" placeholder="prenom.nom@email.com">
+                    </label>
+                    <label class="field">
+                        <span>GitHub (URL)</span>
+                        <input type="text" id="s-github" placeholder="https://github.com/elias0555">
+                    </label>
+                    <label class="field">
+                        <span>LinkedIn (URL)</span>
+                        <input type="text" id="s-linkedin" placeholder="https://linkedin.com/in/...">
+                    </label>
+                    <label class="field">
+                        <span>itch.io (URL)</span>
+                        <input type="text" id="s-itch" placeholder="https://elias.itch.io">
+                    </label>
+
+                    <div class="field">
+                        <span>CV (PDF)</span>
+                        <div id="cv-drop" class="dropzone">
+                            <input type="file" id="cv-input" accept="application/pdf" hidden>
+                            <p class="dropzone-hint">Clique ou glisse ton CV (PDF) ici</p>
+                        </div>
+                        <p id="cv-current" class="form-status"></p>
+                    </div>
+
+                    <!-- Parcours / Formation -->
+                    <div class="field">
+                        <div class="field-head">
+                            <span>Parcours (formation &amp; expérience)</span>
+                            <button type="button" id="add-edu-btn" class="btn btn-ghost btn-sm">+ Entrée</button>
+                        </div>
+                        <div id="edu-container" class="features-container"></div>
+                    </div>
+
+                    <div class="form-footer">
+                        <button type="button" id="settings-cancel" class="btn btn-ghost btn-sm">Fermer</button>
+                        <button type="submit" class="btn btn-primary">💾 Enregistrer les réglages</button>
                     </div>
                 </form>
 

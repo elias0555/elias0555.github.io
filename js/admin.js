@@ -6,10 +6,10 @@ import {
   onAuthStateChanged, signInWithPopup, signOut
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {
-  collection, getDocs, doc, setDoc, deleteDoc, query, orderBy, serverTimestamp
+  collection, getDocs, doc, getDoc, setDoc, deleteDoc, query, orderBy, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import {
-  ref, uploadBytes, getDownloadURL
+  ref, uploadBytes, getDownloadURL, updateMetadata
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 import { seedProjects } from "./seed.js";
 import { youtubeId } from "./data.js";
@@ -224,14 +224,14 @@ function renderFeatures() {
 // ===========================================================================
 //  UPLOAD IMAGES (miniature + galerie) — preview immédiat, upload à la sauvegarde
 // ===========================================================================
-function setupDropzone(dropId, inputId, onFiles, multiple) {
+function setupDropzone(dropId, inputId, onFiles, multiple, acceptPrefix = "image/") {
   const drop = $(dropId), input = $(inputId);
   drop.addEventListener("click", () => input.click());
   input.addEventListener("change", () => { onFiles([...input.files]); input.value = ""; });
   ["dragover", "dragenter"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("dragover"); }));
   ["dragleave", "drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("dragover"); }));
   drop.addEventListener("drop", e => {
-    const files = [...(e.dataTransfer?.files || [])].filter(f => f.type.startsWith("image/"));
+    const files = [...(e.dataTransfer?.files || [])].filter(f => f.type.startsWith(acceptPrefix));
     if (files.length) onFiles(multiple ? files : [files[0]]);
   });
 }
@@ -266,17 +266,48 @@ function renderGallery() {
   });
 }
 
-async function uploadFile(file, slug, kind) {
-  const safe = file.name.replace(/[^\w.\-]/g, "_");
-  const r = ref(storage, `projects/${slug}/${kind}_${Date.now()}_${safe}`);
-  await uploadBytes(r, file);
+// Compresse/redimensionne une image (max 1600px, WebP) AVANT l'upload.
+// Renvoie l'original si le résultat n'est pas plus léger ou si ce n'est pas une image compressible.
+async function compressImage(file, maxDim = 1600, quality = 0.82) {
+  if (!file.type.startsWith("image/") || file.type === "image/gif") return file;
+  try {
+    const dataUrl = await new Promise((res, rej) => {
+      const fr = new FileReader(); fr.onload = () => res(fr.result); fr.onerror = rej; fr.readAsDataURL(file);
+    });
+    const img = await new Promise((res, rej) => {
+      const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = dataUrl;
+    });
+    let { width, height } = img;
+    if (width > maxDim || height > maxDim) {
+      const scale = maxDim / Math.max(width, height);
+      width = Math.round(width * scale); height = Math.round(height * scale);
+    }
+    const canvas = document.createElement("canvas");
+    canvas.width = width; canvas.height = height;
+    canvas.getContext("2d").drawImage(img, 0, 0, width, height);
+    const blob = await new Promise(res => canvas.toBlob(res, "image/webp", quality));
+    if (!blob || blob.size >= file.size) return file;   // pas d'amélioration → on garde l'original
+    return new File([blob], file.name.replace(/\.\w+$/, "") + ".webp", { type: "image/webp" });
+  } catch (e) {
+    console.warn("Compression ignorée :", e);
+    return file;
+  }
+}
+
+// Upload générique vers Storage : dossier libre (slug d'un projet, ou "settings").
+// `metadata` optionnel (ex: forcer l'affichage inline d'un PDF).
+async function uploadFile(file, folder, kind, metadata) {
+  const toUpload = await compressImage(file);
+  const safe = toUpload.name.replace(/[^\w.\-]/g, "_");
+  const r = ref(storage, `${folder}/${kind}_${Date.now()}_${safe}`);
+  await uploadBytes(r, toUpload, metadata);
   return getDownloadURL(r);
 }
 
 // ===========================================================================
 //  FORMULAIRE : nouveau / charger / collecter / enregistrer / supprimer
 // ===========================================================================
-function showForm() { $("project-form").hidden = false; $("form-placeholder").hidden = true; }
+function showForm() { $("settings-form").hidden = true; $("project-form").hidden = false; $("form-placeholder").hidden = true; }
 
 function resetForm() {
   editingId = null;
@@ -431,6 +462,119 @@ $("seed-btn").addEventListener("click", async () => {
     hideLoading();
     console.error(err);
     alert("Erreur d'import : " + err.message + "\n\nVérifie tes règles de sécurité et que OWNER_UID est bien configuré.");
+  }
+});
+
+// ===========================================================================
+//  RÉGLAGES DU SITE (contact / CV)
+// ===========================================================================
+let cvItem = null;       // {url} | {file} | null
+let education = [];       // [{title, place, period, description}]
+
+$("settings-btn").addEventListener("click", openSettings);
+$("add-edu-btn").addEventListener("click", () => { education.push({ title: "", place: "", period: "", description: "" }); renderEdu(); });
+
+function renderEdu() {
+  const wrap = $("edu-container");
+  wrap.innerHTML = "";
+  education.forEach((e, i) => {
+    const block = document.createElement("div");
+    block.className = "feature-edit";
+    block.innerHTML = `
+      <div class="feature-edit-head">
+        <input type="text" class="edu-title" placeholder="Diplôme / poste (ex: Master Game Programming)" value="${escapeAttr(e.title)}">
+        <button type="button" class="btn btn-danger btn-xs edu-del">✕</button>
+      </div>
+      <div class="form-grid">
+        <input type="text" class="edu-place" placeholder="École / entreprise" value="${escapeAttr(e.place)}">
+        <input type="text" class="edu-period" placeholder="Période (ex: 2023 – 2025)" value="${escapeAttr(e.period)}">
+      </div>
+      <textarea class="edu-desc" rows="2" placeholder="Description (optionnel)">${escapeText(e.description)}</textarea>`;
+    block.querySelector(".edu-title").addEventListener("input", ev => e.title = ev.target.value);
+    block.querySelector(".edu-place").addEventListener("input", ev => e.place = ev.target.value);
+    block.querySelector(".edu-period").addEventListener("input", ev => e.period = ev.target.value);
+    block.querySelector(".edu-desc").addEventListener("input", ev => e.description = ev.target.value);
+    block.querySelector(".edu-del").addEventListener("click", () => { education.splice(i, 1); renderEdu(); });
+    wrap.appendChild(block);
+  });
+}
+$("settings-cancel").addEventListener("click", () => {
+  $("settings-form").hidden = true;
+  $("form-placeholder").hidden = false;
+});
+
+async function openSettings() {
+  $("project-form").hidden = true;
+  $("form-placeholder").hidden = true;
+  $("settings-form").hidden = false;
+  $("settings-status").textContent = "";
+  cvItem = null;
+  education = [];
+  ["s-email", "s-github", "s-linkedin", "s-itch"].forEach(id => { $(id).value = ""; });
+  $("cv-current").textContent = "";
+  try {
+    const snap = await getDoc(doc(db, "settings", "site"));
+    const s = snap.exists() ? snap.data() : {};
+    $("s-email").value = s.email || "";
+    $("s-github").value = s.github || "";
+    $("s-linkedin").value = s.linkedin || "";
+    $("s-itch").value = s.itch || "";
+    if (s.cvUrl) { cvItem = { url: s.cvUrl }; renderCv(); }
+    education = (s.education || []).map(e => ({ title: e.title || "", place: e.place || "", period: e.period || "", description: e.description || "" }));
+  } catch (err) { console.error(err); }
+  renderEdu();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function renderCv() {
+  const el = $("cv-current");
+  if (cvItem && cvItem.url) el.innerHTML = `CV actuel : <a href="${cvItem.url}" target="_blank" rel="noopener" style="color:var(--accent)">voir le PDF</a>`;
+  else if (cvItem && cvItem.file) el.textContent = `Nouveau fichier prêt : ${cvItem.file.name}`;
+  else el.textContent = "";
+}
+
+setupDropzone("cv-drop", "cv-input", (files) => {
+  if (!files[0]) return;
+  if (files[0].type !== "application/pdf") { $("settings-status").textContent = "Le CV doit être un PDF."; $("settings-status").classList.add("is-error"); return; }
+  cvItem = { file: files[0] };
+  $("settings-status").textContent = "";
+  renderCv();
+}, false, "application/pdf");
+
+$("settings-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  showLoading("Enregistrement des réglages…");
+  try {
+    // Le CV doit être servi "inline" (sinon le navigateur le télécharge au lieu de l'afficher).
+    const PDF_META = { contentType: "application/pdf", contentDisposition: "inline" };
+    let cvUrl = cvItem && cvItem.url ? cvItem.url : "";
+    if (cvItem && cvItem.file) {
+      cvUrl = await uploadFile(cvItem.file, "settings", "cv", PDF_META);
+    } else if (cvUrl) {
+      // Répare un CV déjà uploadé (force l'affichage inline) — sans re-upload.
+      try { await updateMetadata(ref(storage, cvUrl), PDF_META); } catch (e) { console.warn("MAJ métadonnées CV ignorée :", e); }
+    }
+    await setDoc(doc(db, "settings", "site"), {
+      email: $("s-email").value.trim(),
+      github: $("s-github").value.trim(),
+      linkedin: $("s-linkedin").value.trim(),
+      itch: $("s-itch").value.trim(),
+      cvUrl,
+      education: education
+        .filter(e => e.title.trim())
+        .map(e => ({ title: e.title.trim(), place: e.place.trim(), period: e.period.trim(), description: e.description.trim() })),
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+    hideLoading();
+    if (cvUrl) { cvItem = { url: cvUrl }; renderCv(); }
+    const st = $("settings-status");
+    st.textContent = "✅ Réglages enregistrés."; st.classList.remove("is-error");
+  } catch (err) {
+    hideLoading();
+    console.error(err);
+    const st = $("settings-status");
+    st.textContent = "Erreur : " + err.message + " — as-tu mis à jour tes règles Firestore pour /settings ? (voir SETUP_FIREBASE.md §8)";
+    st.classList.add("is-error");
   }
 });
 

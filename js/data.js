@@ -3,7 +3,7 @@
 // ============================================================================
 import { db } from "../firebase-config.js";
 import {
-  collection, getDocs, query, orderBy, where, limit
+  collection, getDocs, query, orderBy, where, limit, doc, getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 // Récupère tous les projets, triés par "order" croissant.
@@ -20,6 +20,12 @@ export async function fetchProjectBySlug(slug) {
   if (snap.empty) return null;
   const d = snap.docs[0];
   return { id: d.id, ...d.data() };
+}
+
+// Récupère les réglages du site (contact, liens, CV). Renvoie {} si absent.
+export async function fetchSettings() {
+  const snap = await getDoc(doc(db, "settings", "site"));
+  return snap.exists() ? snap.data() : {};
 }
 
 // Extrait l'ID YouTube depuis une URL ou un ID brut. Renvoie "" si rien.

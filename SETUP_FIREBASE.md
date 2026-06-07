@@ -114,10 +114,16 @@ dans les deux blocs ci-dessous.
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    function isOwner() {
+      return request.auth != null && request.auth.uid == "TON_UID";
+    }
     match /projects/{doc} {
-      allow read: if true;                                  // lecture publique (le site)
-      allow write: if request.auth != null
-                   && request.auth.uid == "TON_UID";        // écriture = toi uniquement
+      allow read: if true;        // lecture publique (le site)
+      allow write: if isOwner();  // écriture = toi uniquement
+    }
+    match /settings/{doc} {
+      allow read: if true;        // contact / CV : lecture publique
+      allow write: if isOwner();  // édition = toi uniquement
     }
   }
 }
