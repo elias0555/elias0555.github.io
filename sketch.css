@@ -1,0 +1,165 @@
+/* ============================================================================
+   THÈME « SKETCH » — dessin noir & blanc sur papier
+   Surcouche : à charger APRÈS style.css. Ne modifie pas le thème de base.
+   ============================================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Patrick+Hand&display=swap');
+
+/* --- 1) Palette papier & encre (réécrit les variables du thème) ------------ */
+:root {
+    --bg-color: #f4f0e6;          /* papier */
+    --bg-secondary: #e8e2d2;
+    --card-bg: #fbf8f0;           /* papier clair (cartes) */
+
+    --text-main: #20201d;         /* encre */
+    --text-muted: #5c564a;
+
+    --accent: #20201d;            /* encre = accent (tout en N&B) */
+    --accent-glow: rgba(32,32,29,0.10);
+    --secondary-accent: #6b6356;
+    --secondary-glow: rgba(107,99,86,0.10);
+
+    /* compétences : tout en encre (différenciées par le contour, pas la couleur) */
+    --skill-code: #20201d;
+    --skill-editor: #20201d;
+    --skill-asset: #20201d;
+    --skill-tool: #20201d;
+
+    /* ombres « portées » dures = look autocollant dessiné */
+    --shadow-sm: 3px 3px 0 rgba(32,32,29,0.85);
+    --shadow-md: 6px 6px 0 rgba(32,32,29,0.9);
+    --shadow-glow: 4px 4px 0 rgba(32,32,29,0.95);
+
+    --radius: 3px;
+
+    /* bords « tracés main » (border-radius irrégulier) */
+    --hand-1: 255px 15px 225px 15px / 15px 225px 15px 255px;
+    --hand-2: 15px 225px 15px 255px / 255px 15px 225px 15px;
+    --hand-3: 125px 20px 240px 18px / 20px 200px 22px 230px;
+}
+
+/* --- 2) Typo manuscrite ----------------------------------------------------- */
+body { font-family: 'Patrick Hand', 'Segoe UI', sans-serif; font-size: 1.12rem; }
+h1, h2, h3, h4, nav a, .btn, .filter-chip, .contact-btn { font-family: 'Caveat', cursive; }
+
+h1 {
+    background: none; -webkit-text-fill-color: var(--accent); color: var(--accent);
+    text-shadow: 3px 3px 0 rgba(32,32,29,0.12); font-size: 4.5rem; letter-spacing: 1px;
+}
+h2 { font-size: 2.8rem; letter-spacing: 1px; }
+h3 { font-size: 1.8rem; }
+nav a { font-size: 1.25rem; text-transform: none; letter-spacing: 0.5px; }
+p { font-size: 1.12rem; }
+
+/* --- 3) Fond papier (grille de points type carnet) -------------------------- */
+body::before {
+    background-image: radial-gradient(rgba(32,32,29,0.07) 1.1px, transparent 1.2px);
+    background-size: 22px 22px;
+    filter: none; animation: none;
+    opacity: 1;
+}
+
+/* --- 4) En-tête / nav / footer ---------------------------------------------- */
+header {
+    background: rgba(244,240,230,0.85); backdrop-filter: blur(4px);
+    border-bottom: 3px solid var(--accent);
+}
+nav a { color: var(--accent); }
+nav a::before { background-color: var(--accent); height: 3px; }
+nav a:hover { text-shadow: 1px 1px 0 var(--secondary-accent); }
+footer { background: var(--bg-secondary); color: var(--text-muted); border-top: 3px dashed var(--accent); }
+
+/* --- 5) Trait dessiné qui « se trace » sous les titres ---------------------- */
+h2 { display: inline-block; padding-bottom: 6px; }
+h2::after {
+    content: ''; display: block; height: 7px; width: 0;
+    background: var(--accent); border-radius: var(--hand-1);
+    margin: 8px auto 0; transition: width 0.7s cubic-bezier(.2,.8,.2,1);
+}
+section.is-visible h2::after, header h2::after { width: 90px; }
+
+/* --- 6) Cartes, encadrés, boutons : bords tracés main + ombre dure ---------- */
+.project, .feature, .nav-card, .skills-list li, .btn, .filter-chip, .contact-btn,
+.timeline-item, .cv-frame, .project-gallery a, #project-overview, #technical-details {
+    border: 2.5px solid var(--accent) !important;
+    box-shadow: var(--shadow-sm);
+    background: var(--card-bg);
+}
+.project { border-radius: var(--hand-1) !important; }
+.project:nth-child(even) { border-radius: var(--hand-2) !important; }
+.project:nth-child(3n) { border-radius: var(--hand-3) !important; }
+.feature, .nav-card, #project-overview, #technical-details { border-radius: var(--hand-2) !important; }
+.feature { border-left-width: 2.5px !important; }
+
+.project img { border-radius: 0 !important; border-bottom: 2.5px solid var(--accent); }
+
+/* léger redressement + l'ombre « pousse » au survol = effet collé/dessiné */
+.project:hover, .feature:hover, .nav-card:hover {
+    transform: translate(-2px, -2px) rotate(-0.6deg);
+    box-shadow: var(--shadow-md);
+}
+
+/* --- 7) Images en N&B qui reprennent vie en couleur au survol --------------- */
+.project img, .project-gallery img {
+    filter: grayscale(1) contrast(1.05) brightness(1.02);
+    transition: filter 0.45s ease;
+}
+.project:hover img, .project-gallery a:hover img { filter: grayscale(0) contrast(1); }
+
+/* --- 8) Compétences / tags : étiquettes encre posées de travers ------------- */
+.code-skill, .editor-skill, .asset-skill, .tool-skill {
+    background: transparent !important; color: var(--accent) !important;
+    border: 2px solid var(--accent); border-radius: var(--hand-3);
+    font-family: 'Patrick Hand', sans-serif; font-weight: 400;
+}
+.skills-list li { background: var(--card-bg) !important; }
+.skills-list li:nth-child(odd) { transform: rotate(-2deg); }
+.skills-list li:nth-child(even) { transform: rotate(1.5deg); }
+.skills-list li:hover { transform: rotate(0) scale(1.08); box-shadow: var(--shadow-sm); }
+.editor-skill { border-style: dashed; }
+.asset-skill { border-style: dotted; border-width: 2.5px; }
+.tool-skill { border-style: double; border-width: 4px; }
+
+/* --- 9) Boutons / liens : remplissage encre au survol ----------------------- */
+.btn, .filter-chip, .contact-btn { background: var(--card-bg); color: var(--accent); border-radius: var(--hand-3) !important; }
+.filter-chip.is-active, .btn-primary, .contact-btn.cv { background: var(--accent) !important; color: var(--bg-color) !important; }
+.filter-chip:hover, .contact-btn:hover, .btn:hover { background: var(--accent); color: var(--bg-color); transform: translate(-1px,-1px) rotate(-1deg); box-shadow: var(--shadow-sm); }
+
+/* --- 10) Resume : timeline encre ------------------------------------------- */
+.resume-subtitle { color: var(--accent); }
+.timeline-item { background: transparent; box-shadow: none !important; border: none !important; border-left: 2.5px solid var(--accent) !important; }
+.timeline-item:last-child { border-left-color: transparent !important; }
+.timeline-item::before { background: var(--accent); box-shadow: none; border: 3px solid var(--bg-color); }
+.timeline-period { color: var(--secondary-accent); }
+.cv-frame { background: #fff; box-shadow: var(--shadow-md); }
+
+/* --- 11) Lightbox sur fond « parchemin » ------------------------------------ */
+#lightbox { background-color: rgba(244,240,230,0.96); backdrop-filter: blur(6px); }
+#lightbox-caption { color: var(--text-main); }
+.lightbox-btn { background: var(--accent); color: var(--bg-color); }
+.lightbox-close { color: var(--accent); }
+.lightbox-thumbnails { background: rgba(32,32,29,0.08); }
+.thumb { border-radius: 2px; }
+.thumb.active { border-color: var(--accent); box-shadow: var(--shadow-sm); }
+
+/* --- 12) Animation « sketch » : cadre qui « bout » (filtre SVG animé) ------- */
+/* Liseré en pseudo-élément → seul le trait tremble, le contenu reste net. */
+#featured-project .project {
+    overflow: visible !important; position: relative;
+    border-color: transparent !important; box-shadow: var(--shadow-md);
+}
+#featured-project .project::after {
+    content: ''; position: absolute; inset: -4px; z-index: 4; pointer-events: none;
+    border: 3px solid var(--accent); border-radius: var(--hand-1);
+    filter: url(#sketch-boil);
+}
+
+/* --- 13) Galerie : vignettes dessinées -------------------------------------- */
+.project-gallery a { border-radius: var(--hand-3) !important; overflow: hidden; }
+.project-gallery a::after { color: var(--accent); }
+
+/* respecte les utilisateurs qui réduisent les animations */
+@media (prefers-reduced-motion: reduce) {
+    #featured-project .project::after { filter: none; }
+    .project:hover, .feature:hover, .nav-card:hover { transform: none; }
+}
