@@ -211,11 +211,16 @@ nav a:hover::after { clip-path: inset(0 0 0 0); }
     position: absolute; opacity: 0.45;
     animation: wander 44s ease-in-out infinite;
 }
+/* d1 étoile, d2 cœur, d3 flèche, d4 astérisque, d5 vague,
+   d6 éclair, d7 manette, d8 note de musique */
 .doodle.d1 { top: 12%; left: 10%; width: 46px; color: var(--blue); }
-.doodle.d2 { top: 16%; right: 12%; width: 52px; color: var(--red); animation-delay: -14s; animation-duration: 56s; animation-direction: reverse; }
+.doodle.d2 { top: 16%; right: 12%; width: 44px; color: var(--purple); animation-delay: -14s; animation-duration: 56s; animation-direction: reverse; }
 .doodle.d3 { bottom: 22%; left: 12%; width: 54px; color: var(--green); animation-delay: -26s; animation-duration: 48s; }
 .doodle.d4 { bottom: 18%; right: 13%; width: 42px; color: var(--purple); animation-delay: -34s; animation-duration: 62s; animation-direction: reverse; }
 .doodle.d5 { top: 48%; left: 34%; width: 36px; color: var(--pencil); animation-delay: -8s; animation-duration: 68s; }
+.doodle.d6 { top: 32%; right: 23%; width: 38px; color: var(--blue); animation-delay: -20s; animation-duration: 52s; }
+.doodle.d7 { bottom: 36%; left: 19%; width: 52px; color: var(--green); animation-delay: -42s; animation-duration: 58s; animation-direction: reverse; }
+.doodle.d8 { top: 64%; right: 13%; width: 34px; color: var(--pencil); animation-delay: -4s; animation-duration: 46s; }
 
 /* --- SECTIONS & CARDS --- */
 section { padding: 75px 20px; max-width: var(--max-width); margin: 0 auto; text-align: center; }
@@ -579,12 +584,13 @@ section#video-preview video:hover { box-shadow: var(--shadow-glow); }
     #next-btn { right: 10px; }
     #project-nav-container { flex-direction: column; }
     .nav-card { text-align: center !important; justify-content: center !important; }
-    .doodle.d4, .doodle.d5 { display: none; }
+    .doodle.d4, .doodle.d5, .doodle.d6, .doodle.d7 { display: none; }
     /* Sur mobile : moins de doodles, plus petits, loin des bords
        pour ne gêner ni la nav ni le menu burger */
     .doodle.d1 { top: 10%; left: 14%; width: 30px; }
-    .doodle.d2 { top: 14%; right: 16%; width: 34px; }
+    .doodle.d2 { top: 14%; right: 16%; width: 32px; }
     .doodle.d3 { bottom: 14%; left: 14%; width: 40px; }
+    .doodle.d8 { top: 60%; right: 14%; width: 28px; }
     .burger-btn { width: 48px; height: 48px; }
     #back-to-top { bottom: 16px; right: 16px; width: 48px; height: 48px; }
     section { padding: 60px 16px; }
