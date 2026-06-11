@@ -8,12 +8,43 @@ const slug = new URLSearchParams(location.search).get("p");
 
 function featureBlock(f) {
   const bullets = (f.bullets || []).filter(Boolean);
+  // Média d'illustration (GIF ou image) affiché dans le bloc, ouvrable en grand
+  const media = f.media
+    ? `<a class="feature-media" href="${esc(f.media)}" target="_blank" rel="noopener">
+         <img src="${esc(f.media)}" alt="${esc(f.heading)} illustration" loading="lazy">
+       </a>`
+    : "";
   return `
-    <div class="feature">
-      <h3>${esc(f.heading)}</h3>
-      ${f.text ? `<p>${esc(f.text)}</p>` : ""}
-      ${bullets.length ? `<ul>${bullets.map(b => `<li>${esc(b)}</li>`).join("")}</ul>` : ""}
+    <div class="feature${media ? " has-media" : ""}">
+      <div class="feature-body">
+        <h3>${esc(f.heading)}</h3>
+        ${f.text ? `<p>${esc(f.text)}</p>` : ""}
+        ${bullets.length ? `<ul>${bullets.map(b => `<li>${esc(b)}</li>`).join("")}</ul>` : ""}
+      </div>
+      ${media}
     </div>`;
+}
+
+// Section "Team & Credits" : un rôle + la liste des personnes
+// (les noms sont séparés par " - ", "," ou ";" dans l'admin)
+function creditsHTML(credits) {
+  return credits.map(c => {
+    const names = String(c.names || "")
+      .split(/\s*[,;]\s*|\s+-\s+/)
+      .map(n => n.trim())
+      .filter(Boolean);
+    return `
+      <div class="credit">
+        <span class="credit-role">${esc(c.role)}</span>
+        <span class="credit-names">${names.map(n => `<span class="credit-name">${esc(n)}</span>`).join("")}</span>
+      </div>`;
+  }).join("");
+}
+
+// Retire le lien de nav d'une section absente (évite les ancres mortes)
+function dropNavLink(hash) {
+  const a = document.querySelector(`header nav a[href="${hash}"]`);
+  if (a) a.closest("li")?.remove();
 }
 
 function videoHTML(project) {
@@ -137,6 +168,26 @@ async function render() {
   document.getElementById("proj-subtitle").textContent = project.subtitle || "";
   document.getElementById("proj-overview").textContent = project.overview || "";
 
+  // Badges méta : catégorie (Perso / Scolaire) + Game Jam
+  const metaEl = document.getElementById("proj-meta");
+  if (metaEl) {
+    const badges = [];
+    badges.push(project.category === "perso"
+      ? `<span class="meta-badge perso">Personal project</span>`
+      : `<span class="meta-badge school">School project</span>`);
+    if (project.jam) badges.push(`<span class="meta-badge jam">⚑ ${esc(project.jam)}</span>`);
+    metaEl.innerHTML = badges.join("");
+  }
+
+  // Team & Credits
+  const credits = (project.credits || []).filter(c => c && (c.role || c.names));
+  if (credits.length) {
+    document.getElementById("proj-credits").innerHTML = creditsHTML(credits);
+    document.getElementById("team").hidden = false;
+  } else {
+    dropNavLink("#team");
+  }
+
   // Vidéo
   const video = videoHTML(project);
   if (video) {
@@ -149,12 +200,16 @@ async function render() {
   if (features.length) {
     document.getElementById("proj-features").innerHTML = features.map(featureBlock).join("");
     document.getElementById("technical-details").hidden = false;
+  } else {
+    dropNavLink("#technical-details");
   }
 
   // Galerie
   if (project.gallery && project.gallery.length) {
     document.getElementById("proj-gallery").innerHTML = galleryHTML(project.gallery);
     document.getElementById("gallery").hidden = false;
+  } else {
+    dropNavLink("#gallery");
   }
 
   // Navigation Prev/Next (en boucle)

@@ -259,20 +259,20 @@ section { padding: 75px 20px; max-width: var(--max-width); margin: 0 auto; text-
 .project ul { padding-left: 22px; margin-top: auto; color: var(--ink-soft); font-size: 1rem; }
 .project ul li::marker { content: '✎ '; color: var(--blue); }
 
-/* Featured Project */
-#featured-project .project {
+/* Featured Project (carte large en tête de la section Projects) */
+#featured-container .project {
     max-width: 900px; margin: 0 auto; flex-direction: row; align-items: stretch;
 }
-#featured-project .project img {
+#featured-container .project img {
     width: 48%; height: auto; max-height: 340px; align-self: center;
     margin: 24px 0 24px 24px;
     transform: rotate(-1.5deg);
 }
-#featured-project .project-content { width: 52%; justify-content: center; }
+#featured-container .project-content { width: 52%; justify-content: center; }
 @media (max-width: 768px) {
-    #featured-project .project { flex-direction: column; }
-    #featured-project .project img { width: calc(100% - 44px); height: 250px; margin: 24px auto 0; }
-    #featured-project .project-content { width: 100%; }
+    #featured-container .project { flex-direction: column; }
+    #featured-container .project img { width: calc(100% - 44px); height: 250px; margin: 24px auto 0; }
+    #featured-container .project-content { width: 100%; }
 }
 
 /* Features List — fiche façon page de cahier (lignes + marge rouge) */
@@ -620,6 +620,116 @@ footer::before {
 .filter-chip:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 rgba(47, 44, 38, 0.14); }
 .filter-chip.is-active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 
+/* Filtres catégorie (Tous / Perso / Scolaire / Jam) — plus gros, actif au surligneur */
+.category-filters { margin-bottom: 16px; }
+.category-filters .filter-chip { font-size: 1.05rem; padding: 8px 22px; }
+.category-filters .filter-chip.is-active { background: var(--yellow); color: var(--ink); border-color: var(--ink); }
+
+/* ==========================================================================
+   GROUPES DE PROJETS (Perso / Scolaire) + badge Game Jam
+   ========================================================================== */
+#featured-container { margin-bottom: 50px; }
+.project-group { margin-top: 40px; }
+.group-title {
+    font-size: 2.05rem; display: inline-block; position: relative;
+    transform: rotate(-1deg); margin: 0 0 14px;
+}
+.group-title::after {
+    content: ''; display: block; height: 9px; width: 100%;
+    background: var(--squiggle-blue) no-repeat center / 100% 100%; opacity: 0.85;
+}
+.featured-title { margin-bottom: 18px; }
+.featured-title::after { background: var(--squiggle-red) no-repeat center / 100% 100%; }
+.projects-empty { color: var(--ink-soft); font-size: 1.05rem; margin-top: 25px; }
+
+/* Étiquette "jam" collée de travers sur le coin de la carte */
+.jam-badge {
+    position: absolute; top: 14px; right: -10px; z-index: 4;
+    background: var(--yellow); color: var(--ink);
+    font-family: var(--font-hand); font-weight: 700; font-size: 1.1rem;
+    padding: 2px 14px; border: 2px solid var(--ink);
+    border-radius: var(--sketch-radius-sm);
+    transform: rotate(3deg);
+    box-shadow: 2px 3px 0 rgba(47, 44, 38, 0.18);
+    max-width: 72%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* ==========================================================================
+   SKILLS — sous-blocs (technique / soft skills)
+   ========================================================================== */
+.skills-block { margin-bottom: 35px; }
+.skills-block:last-child { margin-bottom: 0; }
+.skills-subtitle {
+    color: var(--blue); font-size: 1.6rem; letter-spacing: 0.5px;
+    display: inline-block; margin-bottom: 18px;
+}
+.skills-subtitle::after {
+    content: ''; display: block; height: 8px; width: 100%;
+    background: var(--squiggle-blue) no-repeat center / 100% 100%; opacity: 0.8;
+}
+
+/* ==========================================================================
+   PAGE PROJET — badges méta (catégorie / jam) + Team & Credits
+   ========================================================================== */
+.proj-meta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+.meta-badge {
+    font-family: var(--font-hand); font-weight: 700; font-size: 1.2rem;
+    padding: 3px 18px; border: 2px solid var(--ink); border-radius: var(--sketch-radius-sm);
+    box-shadow: 2px 3px 0 rgba(47, 44, 38, 0.14);
+    transform: rotate(-1.2deg); display: inline-block;
+}
+.meta-badge.school { background: var(--skill-editor); }
+.meta-badge.perso { background: var(--skill-asset); }
+.meta-badge.jam { background: var(--yellow); transform: rotate(1.5deg); }
+
+/* Crédits : une fiche par rôle, noms en étiquettes */
+.credits-list {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px; max-width: 900px; margin: 0 auto; text-align: left;
+}
+.credit {
+    background: var(--paper-card); border: 2px solid var(--ink);
+    border-radius: var(--sketch-radius-sm); box-shadow: var(--shadow-sm);
+    padding: 18px 22px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.credit:nth-child(odd) { transform: rotate(-0.8deg); }
+.credit:nth-child(even) { transform: rotate(0.7deg); }
+.credit:hover { transform: rotate(0deg) translateY(-4px); box-shadow: var(--shadow-md); }
+.credit-role {
+    display: block; font-family: var(--font-hand); font-weight: 700;
+    font-size: 1.45rem; color: var(--blue); margin-bottom: 10px;
+}
+.credit-names { display: flex; flex-wrap: wrap; gap: 8px; }
+.credit-name {
+    background: var(--paper); color: var(--ink);
+    border: 2px solid var(--ink); border-radius: var(--sketch-radius-sm);
+    padding: 3px 12px; font-weight: 700; font-size: 0.95rem;
+    box-shadow: 2px 2px 0 rgba(47, 44, 38, 0.12);
+}
+
+/* ==========================================================================
+   DÉTAILS TECHNIQUES — média d'illustration (GIF/image) dans les blocs
+   ========================================================================== */
+.feature.has-media { display: flex; gap: 28px; align-items: center; }
+/* Une fiche sur deux : média à gauche, pour rythmer la lecture */
+.feature.has-media:nth-child(even) { flex-direction: row-reverse; }
+.feature-body { flex: 1 1 auto; min-width: 0; }
+.feature-media {
+    flex: 0 0 min(340px, 38%); display: block;
+    border: 5px solid #fff; outline: 2px solid var(--ink); border-radius: 3px;
+    box-shadow: 3px 4px 0 rgba(47, 44, 38, 0.12);
+    transform: rotate(1.2deg);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.feature.has-media:nth-child(even) .feature-media { transform: rotate(-1.2deg); }
+.feature-media img { width: 100%; height: auto; margin: 0; border-radius: 0; display: block; }
+.feature-media:hover { transform: rotate(0deg) scale(1.02); box-shadow: var(--shadow-md); }
+@media (max-width: 768px) {
+    .feature.has-media, .feature.has-media:nth-child(even) { flex-direction: column; }
+    .feature-media { flex-basis: auto; width: 100%; max-width: 420px; }
+}
+
 /* ==========================================================================
    SECTION RESUME (parcours + aperçu CV)
    ========================================================================== */
@@ -842,6 +952,15 @@ footer::before {
 .feature-edit-head { display: flex; gap: 10px; margin-bottom: 10px; }
 .feature-edit-head input { flex: 1; }
 .feature-edit textarea { margin-top: 8px; }
+.feature-edit input + input { margin-top: 8px; }
+
+/* Média d'illustration d'un bloc (GIF/image) */
+.feat-media-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 10px; }
+.feat-media-preview { position: relative; }
+.feat-media-preview img { max-height: 90px; border-radius: 6px; border: 1px solid var(--ink); display: block; margin: 0; }
+.feat-media-preview .feat-media-del { position: absolute; top: -8px; right: -8px; }
+
+.field-hint { color: var(--ink-soft); font-size: 0.85rem; margin: -2px 0 10px; }
 
 .form-footer { display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px; border-top: 2px dashed var(--pencil); padding-top: 18px; }
 

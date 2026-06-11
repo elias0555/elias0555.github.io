@@ -33,7 +33,8 @@ const TYPE_LABEL = {
 let allProjects = [];
 let editingId = null;          // slug du projet en cours d'édition (null = nouveau)
 let selectedTags = [];         // [{label, type}]
-let features = [];             // [{heading, text, bullets}]
+let features = [];             // [{heading, text, bullets, media}] — media: {url} | {file, preview} | null
+let credits = [];              // [{role, names}] — names: "Elias - Yoan, Ena…"
 let thumbItem = null;          // {url} | {file, preview} | null
 let galleryItems = [];         // [{url} | {file, preview}]
 
@@ -196,14 +197,15 @@ $("tag-add-btn").addEventListener("click", () => {
 });
 
 // ===========================================================================
-//  DÉTAILS TECHNIQUES (features)
+//  DÉTAILS TECHNIQUES (features) — avec média d'illustration (GIF/image)
 // ===========================================================================
-$("add-feature-btn").addEventListener("click", () => { features.push({ heading: "", text: "", bullets: "" }); renderFeatures(); });
+$("add-feature-btn").addEventListener("click", () => { features.push({ heading: "", text: "", bullets: "", media: null }); renderFeatures(); });
 
 function renderFeatures() {
   const wrap = $("features-container");
   wrap.innerHTML = "";
   features.forEach((f, i) => {
+    const mediaSrc = f.media ? (f.media.url || f.media.preview) : "";
     const block = document.createElement("div");
     block.className = "feature-edit";
     block.innerHTML = `
@@ -212,11 +214,55 @@ function renderFeatures() {
         <button type="button" class="btn btn-danger btn-xs feat-del">✕</button>
       </div>
       <textarea class="feat-text" rows="2" placeholder="Description…">${escapeText(f.text)}</textarea>
-      <textarea class="feat-bullets" rows="3" placeholder="Un point par ligne…">${escapeText(f.bullets)}</textarea>`;
+      <textarea class="feat-bullets" rows="3" placeholder="Un point par ligne…">${escapeText(f.bullets)}</textarea>
+      <div class="feat-media-row">
+        <input type="file" class="feat-media-input" accept="image/*" hidden>
+        ${mediaSrc ? `
+          <div class="feat-media-preview">
+            <img src="${mediaSrc}" alt="">
+            <button type="button" class="btn btn-danger btn-xs feat-media-del" title="Retirer le média">✕</button>
+          </div>` : ""}
+        <button type="button" class="btn btn-ghost btn-xs feat-media-btn">
+          🖼 ${mediaSrc ? "Changer le GIF / l'image" : "Ajouter un GIF / une image d'illustration"}
+        </button>
+      </div>`;
     block.querySelector(".feat-heading").addEventListener("input", e => f.heading = e.target.value);
     block.querySelector(".feat-text").addEventListener("input", e => f.text = e.target.value);
     block.querySelector(".feat-bullets").addEventListener("input", e => f.bullets = e.target.value);
     block.querySelector(".feat-del").addEventListener("click", () => { features.splice(i, 1); renderFeatures(); });
+
+    const fileInput = block.querySelector(".feat-media-input");
+    block.querySelector(".feat-media-btn").addEventListener("click", () => fileInput.click());
+    fileInput.addEventListener("change", () => {
+      if (!fileInput.files[0]) return;
+      f.media = { file: fileInput.files[0], preview: URL.createObjectURL(fileInput.files[0]) };
+      renderFeatures();
+    });
+    block.querySelector(".feat-media-del")?.addEventListener("click", () => { f.media = null; renderFeatures(); });
+    wrap.appendChild(block);
+  });
+}
+
+// ===========================================================================
+//  ÉQUIPE & CRÉDITS — un bloc par rôle, noms séparés par " - " ou ","
+// ===========================================================================
+$("add-credit-btn").addEventListener("click", () => { credits.push({ role: "", names: "" }); renderCredits(); });
+
+function renderCredits() {
+  const wrap = $("credits-container");
+  wrap.innerHTML = "";
+  credits.forEach((c, i) => {
+    const block = document.createElement("div");
+    block.className = "feature-edit";
+    block.innerHTML = `
+      <div class="feature-edit-head">
+        <input type="text" class="credit-role-input" placeholder="Rôle (ex: Game design & programming)" value="${escapeAttr(c.role)}">
+        <button type="button" class="btn btn-danger btn-xs credit-del">✕</button>
+      </div>
+      <input type="text" class="credit-names-input" placeholder="Noms (ex: Elias OSBORN SALINAS - Yoan TSITIONIS)" value="${escapeAttr(c.names)}">`;
+    block.querySelector(".credit-role-input").addEventListener("input", e => c.role = e.target.value);
+    block.querySelector(".credit-names-input").addEventListener("input", e => c.names = e.target.value);
+    block.querySelector(".credit-del").addEventListener("click", () => { credits.splice(i, 1); renderCredits(); });
     wrap.appendChild(block);
   });
 }
@@ -311,12 +357,13 @@ function showForm() { $("settings-form").hidden = true; $("project-form").hidden
 
 function resetForm() {
   editingId = null;
-  selectedTags = []; features = []; thumbItem = null; galleryItems = [];
+  selectedTags = []; features = []; credits = []; thumbItem = null; galleryItems = [];
   $("project-form").reset();
+  $("f-category").value = "school";
   $("form-title").textContent = "Nouveau projet";
   $("delete-btn").hidden = true;
   status("");
-  renderSelectedTags(); renderFeatures(); renderThumb(); renderGallery();
+  renderSelectedTags(); renderFeatures(); renderCredits(); renderThumb(); renderGallery();
   renderProjectList();
 }
 
@@ -336,6 +383,8 @@ function loadIntoForm(p) {
   $("f-slug").value = p.slug || p.id || "";
   $("f-subtitle").value = p.subtitle || "";
   $("f-genre").value = p.genre || "";
+  $("f-category").value = p.category === "perso" ? "perso" : "school";
+  $("f-jam").value = p.jam || "";
   $("f-bullets").value = (p.cardBullets || []).join("\n");
   $("f-overview").value = p.overview || "";
   $("f-youtube").value = p.youtubeId || "";
@@ -343,13 +392,18 @@ function loadIntoForm(p) {
   $("f-order").value = p.order ?? 0;
 
   selectedTags = (p.tags || []).map(t => ({ label: t.label, type: t.type }));
-  features = (p.features || []).map(f => ({ heading: f.heading || "", text: f.text || "", bullets: (f.bullets || []).join("\n") }));
+  features = (p.features || []).map(f => ({
+    heading: f.heading || "", text: f.text || "",
+    bullets: (f.bullets || []).join("\n"),
+    media: f.media ? { url: f.media } : null
+  }));
+  credits = (p.credits || []).map(c => ({ role: c.role || "", names: c.names || "" }));
   thumbItem = p.thumbnail ? { url: p.thumbnail } : null;
   galleryItems = (p.gallery || []).map(url => ({ url }));
 
   $("delete-btn").hidden = false;
   status("");
-  renderSelectedTags(); renderFeatures(); renderThumb(); renderGallery();
+  renderSelectedTags(); renderFeatures(); renderCredits(); renderThumb(); renderGallery();
   renderProjectList();
   showForm();
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -379,20 +433,32 @@ $("project-form").addEventListener("submit", async (e) => {
       gallery.push(g.url ? g.url : await uploadFile(g.file, slug, "gallery"));
     }
 
-    // 3) Construit le document
+    // 3) Upload des médias de features (GIF/images d'illustration)
+    const cleanFeatures = [];
+    for (const f of features) {
+      if (!f.heading.trim()) continue;
+      let media = "";
+      if (f.media) media = f.media.url || await uploadFile(f.media.file, slug, "feature");
+      cleanFeatures.push({ heading: f.heading.trim(), text: f.text.trim(), bullets: linesToArray(f.bullets), media });
+    }
+
+    // 4) Construit le document
     const data = {
       slug, title,
       subtitle: $("f-subtitle").value.trim(),
       genre: $("f-genre").value.trim(),
+      category: $("f-category").value === "perso" ? "perso" : "school",
+      jam: $("f-jam").value.trim(),
       tags: selectedTags,
       cardBullets: linesToArray($("f-bullets").value),
       thumbnail,
       overview: $("f-overview").value.trim(),
       youtubeId: youtubeId($("f-youtube").value) || "",
       videoUrl: "",
-      features: features
-        .filter(f => f.heading.trim())
-        .map(f => ({ heading: f.heading.trim(), text: f.text.trim(), bullets: linesToArray(f.bullets) })),
+      credits: credits
+        .filter(c => c.role.trim() || c.names.trim())
+        .map(c => ({ role: c.role.trim(), names: c.names.trim() })),
+      features: cleanFeatures,
       gallery,
       featured: $("f-featured").checked,
       order: Number($("f-order").value) || 0,
@@ -405,7 +471,7 @@ $("project-form").addEventListener("submit", async (e) => {
     if (!existing) data.createdAt = serverTimestamp();
     else data.createdAt = existing.createdAt || serverTimestamp();
 
-    // 4) Si Featured coché, retire le flag des autres
+    // 5) Si Featured coché, retire le flag des autres
     if (data.featured) {
       for (const p of allProjects) {
         if (p.id !== slug && p.featured) {
@@ -414,7 +480,7 @@ $("project-form").addEventListener("submit", async (e) => {
       }
     }
 
-    // 5) Écrit le doc (slug = id). Si le slug a changé, supprime l'ancien.
+    // 6) Écrit le doc (slug = id). Si le slug a changé, supprime l'ancien.
     await setDoc(doc(db, "projects", slug), data, { merge: false });
     if (editingId && editingId !== slug) await deleteDoc(doc(db, "projects", editingId));
 

@@ -24,18 +24,27 @@
             <ul>
                 <li><a href="index.html">Home</a></li>
                 <li><a href="#project-overview">Overview</a></li>
+                <li><a href="#team">Team</a></li>
                 <li><a href="#technical-details">Technical Details</a></li>
                 <li><a href="#gallery">Gallery</a></li>
             </ul>
         </nav>
         <h1 id="proj-title">Loading…</h1>
         <p id="proj-subtitle"></p>
+        <!-- Badges catégorie (Perso/Scolaire) + Game Jam, remplis par JS -->
+        <div id="proj-meta" class="proj-meta"></div>
     </header>
 
     <!-- Project Overview Section -->
     <section id="project-overview">
         <h2>Project Overview</h2>
         <p id="proj-overview"></p>
+    </section>
+
+    <!-- Team & Credits Section (masquée si pas de crédits) -->
+    <section id="team" hidden>
+        <h2>Team &amp; Credits</h2>
+        <div class="credits-list" id="proj-credits"></div>
     </section>
 
     <!-- Video Preview Section (masquée si pas de vidéo) -->

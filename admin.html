@@ -91,6 +91,21 @@
                         <input type="text" id="f-genre" placeholder="A fast-paced platformer...">
                     </label>
 
+                    <!-- Catégorie + Game Jam -->
+                    <div class="form-grid">
+                        <label class="field">
+                            <span>Catégorie</span>
+                            <select id="f-category">
+                                <option value="school">Projet scolaire</option>
+                                <option value="perso">Projet perso</option>
+                            </select>
+                        </label>
+                        <label class="field">
+                            <span>Game Jam (nom de la jam — laisse vide si hors jam)</span>
+                            <input type="text" id="f-jam" placeholder="Ex : Global Game Jam 2025">
+                        </label>
+                    </div>
+
                     <!-- Tags / compétences -->
                     <div class="field">
                         <span>Compétences / Tags</span>
@@ -129,6 +144,17 @@
                         <span>Description complète (page projet)</span>
                         <textarea id="f-overview" rows="4" placeholder="Description détaillée du projet…"></textarea>
                     </label>
+
+                    <!-- Équipe / crédits -->
+                    <div class="field">
+                        <div class="field-head">
+                            <span>Équipe &amp; crédits</span>
+                            <button type="button" id="add-credit-btn" class="btn btn-ghost btn-sm">+ Rôle</button>
+                        </div>
+                        <p class="field-hint">Un bloc par rôle. Sépare les noms par « - » ou « , ».
+                            Ex : <em>Game design &amp; programming</em> → <em>Elias OSBORN SALINAS - Yoan TSITIONIS</em></p>
+                        <div id="credits-container" class="features-container"></div>
+                    </div>
 
                     <!-- Vidéo YouTube -->
                     <label class="field">

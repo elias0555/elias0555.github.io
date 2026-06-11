@@ -25,9 +25,9 @@
         <nav>
             <ul>
                 <li><a href="#about">About</a></li>
-                <li><a href="#resume">Resume</a></li>
                 <li><a href="#projects">Projects</a></li>
                 <li><a href="#skills">Skills</a></li>
+                <li><a href="#resume">Resume</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
         </nav>
@@ -39,6 +39,59 @@
     <section id="about">
         <h2>About Me</h2>
         <p>Hello! I am a Gameplay Programming student currently studying at ISART DIGITAL in Paris. I am seeking an internship to further develop my skills and gain professional experience in the industry.</p>
+    </section>
+
+    <!-- Projects Section (générée dynamiquement depuis Firebase)
+         Featured en tête, puis filtres, puis projets groupés Perso / Scolaire -->
+    <section id="projects">
+        <h2>Projects</h2>
+        <div id="featured-container"></div>
+
+        <div class="project-filters category-filters" id="category-filters"></div>
+        <div class="project-filters" id="project-filters"></div>
+
+        <div class="project-group" id="group-perso" hidden>
+            <h3 class="group-title">Personal Projects</h3>
+            <div class="project-grid" id="grid-perso"></div>
+        </div>
+        <div class="project-group" id="group-school" hidden>
+            <h3 class="group-title">School Projects</h3>
+            <div class="project-grid" id="grid-school"></div>
+        </div>
+        <p id="projects-empty" class="projects-empty" hidden>No project matches this filter.</p>
+    </section>
+
+    <!-- Skills Section (technique + soft skills réunis) -->
+    <section id="skills">
+        <h2>Skills</h2>
+        <div class="skills-block">
+            <h3 class="skills-subtitle">Technical Skills</h3>
+            <div class="skills-container">
+                <ul class="skills-list">
+                    <li class="code-skill">C#</li>
+                    <li class="code-skill">Git</li>
+                    <li class="editor-skill">Unity</li>
+                    <li class="editor-skill">Godot</li>
+                    <li class="asset-skill">Blender</li>
+                    <li class="asset-skill">Aseprite</li>
+                    <li class="asset-skill">Procreate</li>
+                    <li class="asset-skill">Photoshop</li>
+                    <li class="asset-skill">Audacity</li>
+                    <li class="tool-skill">Office Suite</li>
+                </ul>
+            </div>
+        </div>
+        <div class="skills-block">
+            <h3 class="skills-subtitle">Soft Skills &amp; Languages</h3>
+            <div class="skills-container">
+                <ul class="skills-list">
+                    <li class="tool-skill">Collaborative Work</li>
+                    <li class="tool-skill">English (Fluent)</li>
+                    <li class="tool-skill">French</li>
+                    <li class="tool-skill">Spanish</li>
+                </ul>
+            </div>
+        </div>
     </section>
 
     <!-- Resume Section (parcours + aperçu CV, éditable depuis l'admin) -->
@@ -53,51 +106,6 @@
                 <h3 class="resume-subtitle">Curriculum Vitae</h3>
                 <div id="resume-cv" class="resume-cv"></div>
             </div>
-        </div>
-    </section>
-
-    <!-- Featured Project Section (généré dynamiquement depuis Firebase) -->
-    <section id="featured-project">
-        <h2>Featured Project</h2>
-        <div id="featured-container"></div>
-    </section>
-
-    <!-- Projects Section (générée dynamiquement depuis Firebase) -->
-    <section id="projects">
-        <h2>Projects</h2>
-        <div class="project-filters" id="project-filters"></div>
-        <div class="project-grid" id="project-grid"></div>
-    </section>
-
-    <!-- Technical Skills Section -->
-    <section id="skills">
-        <h2>Technical Skills</h2>
-        <div class="skills-container">
-            <ul class="skills-list">
-                <li class="code-skill">C#</li>
-                <li class="code-skill">Git</li>
-                <li class="editor-skill">Unity</li>
-                <li class="editor-skill">Godot</li>
-                <li class="asset-skill">Blender</li>
-                <li class="asset-skill">Aseprite</li>
-                <li class="asset-skill">Procreate</li>
-                <li class="asset-skill">Photoshop</li>
-                <li class="asset-skill">Audacity</li>
-                <li class="tool-skill">Office Suite</li>
-            </ul>
-        </div>
-    </section>
-
-    <!-- Soft Skills Section -->
-    <section id="soft-skills">
-        <h2>Soft Skills & Languages</h2>
-        <div class="skills-container">
-            <ul class="skills-list">
-                <li class="tool-skill">Collaborative Work</li>
-                <li class="tool-skill">English (Fluent)</li>
-                <li class="tool-skill">French</li>
-                <li class="tool-skill">Spanish</li>
-            </ul>
         </div>
     </section>
 
