@@ -388,6 +388,8 @@ function loadIntoForm(p) {
   $("f-bullets").value = (p.cardBullets || []).join("\n");
   $("f-overview").value = p.overview || "";
   $("f-youtube").value = p.youtubeId || "";
+  $("f-itch").value = p.itchUrl || "";
+  $("f-steam").value = p.steamUrl || "";
   $("f-featured").checked = !!p.featured;
   $("f-order").value = p.order ?? 0;
 
@@ -455,6 +457,8 @@ $("project-form").addEventListener("submit", async (e) => {
       overview: $("f-overview").value.trim(),
       youtubeId: youtubeId($("f-youtube").value) || "",
       videoUrl: "",
+      itchUrl: $("f-itch").value.trim(),
+      steamUrl: $("f-steam").value.trim(),
       credits: credits
         .filter(c => c.role.trim() || c.names.trim())
         .map(c => ({ role: c.role.trim(), names: c.names.trim() })),

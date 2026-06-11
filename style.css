@@ -693,6 +693,28 @@ footer::before {
 .meta-badge.perso { background: var(--skill-asset); }
 .meta-badge.jam { background: var(--yellow); transform: rotate(1.5deg); }
 
+/* Boutons "jouer" (itch.io / Steam) sous le titre du projet */
+.proj-links { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+.play-btn {
+    font-family: var(--font-body); font-weight: 700; font-size: 1.05rem; padding: 9px 22px;
+    border: 2px solid var(--ink); border-radius: var(--sketch-radius-sm);
+    box-shadow: 3px 4px 0 rgba(47, 44, 38, 0.18);
+    display: inline-flex; align-items: center; gap: 9px;
+    transform: rotate(-1deg);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.play-btn svg { width: 22px; height: 22px; flex-shrink: 0; }
+.play-btn:hover {
+    transform: rotate(0deg) translate(-2px, -3px);
+    box-shadow: 5px 6px 0 rgba(47, 44, 38, 0.22);
+    animation: sketch-morph 0.5s steps(1, end) infinite;
+}
+.play-btn:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 rgba(47, 44, 38, 0.16); }
+.play-btn.itch { background: #fa5c5c; color: #fff; }
+.play-btn.itch:hover { color: #fff; }
+.play-btn.steam { background: #1b2838; color: #fff; transform: rotate(0.8deg); }
+.play-btn.steam:hover { color: #fff; }
+
 /* Crédits : une fiche par rôle, noms en étiquettes */
 .credits-list {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));

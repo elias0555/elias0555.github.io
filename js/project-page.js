@@ -185,6 +185,23 @@ async function render() {
     metaEl.innerHTML = badges.join("");
   }
 
+  // Boutons "jouer" : itch.io / Steam
+  const linksEl = document.getElementById("proj-links");
+  if (linksEl) {
+    const links = [];
+    if (project.itchUrl) {
+      links.push(`<a class="play-btn itch" href="${esc(project.itchUrl)}" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 9 h10 a4 4 0 0 1 4 4 v1 a3 3 0 0 1 -5.5 1.6 L14 14 h-4 l-1.5 1.6 A3 3 0 0 1 3 14 v-1 a4 4 0 0 1 4 -4 Z M8 11.5 v2.5 M6.8 12.8 h2.5 M15.5 11.5 h.01 M17.5 13.5 h.01" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Play on itch.io</a>`);
+    }
+    if (project.steamUrl) {
+      links.push(`<a class="play-btn steam" href="${esc(project.steamUrl)}" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="15" cy="9.5" r="2.4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="9" cy="15.5" r="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10.8 14.2 L13.3 11.3 M4 13.5 l3.2 1.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        View on Steam</a>`);
+    }
+    linksEl.innerHTML = links.join("");
+  }
+
   // Team & Credits
   const credits = (project.credits || []).filter(c => c && (c.role || c.names));
   if (credits.length) {

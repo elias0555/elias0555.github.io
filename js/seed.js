@@ -204,8 +204,8 @@ export async function seedProjects() {
   let count = 0;
   for (const p of SEED_PROJECTS) {
     await setDoc(doc(db, "projects", p.slug), {
-      // Défauts des champs récents (catégorie, jam, crédits) — surchargés si présents dans p
-      category: "school", jam: "", credits: [],
+      // Défauts des champs récents (catégorie, jam, crédits, liens) — surchargés si présents dans p
+      category: "school", jam: "", credits: [], itchUrl: "", steamUrl: "",
       ...p,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()
