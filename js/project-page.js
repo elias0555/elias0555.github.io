@@ -2,7 +2,7 @@
 //  PAGE PROJET — lit ?p=slug, peuple le template, monte galerie + nav + anims
 // ============================================================================
 import { fetchProjects, youtubeId, esc } from "./data.js";
-import { initScrollReveal, initLightbox } from "../script.js";
+import { initScrollReveal, initLightbox, initBackToTop } from "../script.js";
 
 const slug = new URLSearchParams(location.search).get("p");
 
@@ -39,6 +39,57 @@ function galleryHTML(images) {
   return (images || []).map((src, i) =>
     `<a href="${esc(src)}"><img src="${esc(src)}" alt="Screenshot ${i + 1}"></a>`
   ).join("");
+}
+
+// Menu burger fixe en haut à gauche : au survol (ou au clic sur tactile),
+// un panneau papier liste tous les projets avec leurs infos clés
+function projectMenuHTML(projects, currentSlug) {
+  const items = projects.map((p, i) => {
+    const current = p.slug === currentSlug;
+    const tags = (p.tags || [])
+      .map(t => `<span class="${esc(t.type || "tool-skill")}">${esc(t.label)}</span>`)
+      .join("");
+    return `
+      <a href="project.html?p=${encodeURIComponent(p.slug)}" style="--i:${i}"
+         class="pm-item${current ? " current" : ""}" ${current ? 'aria-current="page"' : ""}>
+        <img src="${esc(p.thumbnail || "")}" alt="" loading="lazy">
+        <div class="pm-meta">
+          <strong>${esc(p.title)}</strong>
+          ${p.genre ? `<small>${esc(p.genre)}</small>` : ""}
+          ${tags ? `<div class="pm-tags">${tags}</div>` : ""}
+        </div>
+      </a>`;
+  }).join("");
+
+  return `
+    <button type="button" class="burger-btn" aria-haspopup="true" aria-expanded="false"
+            aria-controls="project-menu-panel" aria-label="Tous les projets" title="Tous les projets">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M4 7 Q 9 5.5 12 7 T 20 7 M4 12 Q 9 10.5 12 12 T 20 12 M4 17 Q 9 15.5 12 17 T 20 17"
+              fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <nav id="project-menu-panel" class="project-menu-panel" aria-label="Autres projets">
+      <p class="pm-title">Tous les projets</p>
+      ${items}
+    </nav>`;
+}
+
+function initProjectMenu(projects, currentSlug) {
+  const menu = document.createElement("div");
+  menu.className = "project-menu";
+  menu.innerHTML = projectMenuHTML(projects, currentSlug);
+  document.body.appendChild(menu);
+
+  // Sur tactile il n'y a pas de hover : le bouton ouvre/ferme le panneau
+  const btn = menu.querySelector(".burger-btn");
+  const close = () => { menu.classList.remove("open"); btn.setAttribute("aria-expanded", "false"); };
+  btn.addEventListener("click", () => {
+    const open = menu.classList.toggle("open");
+    btn.setAttribute("aria-expanded", String(open));
+  });
+  document.addEventListener("click", (e) => { if (!menu.contains(e.target)) close(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
 }
 
 function navHTML(prev, next) {
@@ -115,11 +166,25 @@ async function render() {
     navContainer.innerHTML = navHTML(prev, next);
     const footer = document.querySelector("footer");
     footer.parentNode.insertBefore(navContainer, footer);
+
+    // Menu burger fixe : changer de projet depuis n'importe où dans la page
+    initProjectMenu(projects, slug);
+
+    // Raccourcis clavier ← / → (désactivés quand la lightbox est ouverte
+    // ou qu'un champ de saisie a le focus)
+    document.addEventListener("keydown", (e) => {
+      const lb = document.getElementById("lightbox");
+      if (lb && lb.classList.contains("active")) return;
+      if (e.target.matches("input, textarea, select")) return;
+      if (e.key === "ArrowLeft") location.href = `project.html?p=${encodeURIComponent(prev.slug)}`;
+      if (e.key === "ArrowRight") location.href = `project.html?p=${encodeURIComponent(next.slug)}`;
+    });
   }
 
   // Comportements UI (après injection du DOM)
   initLightbox();
   initScrollReveal();
+  initBackToTop();
 }
 
 render();

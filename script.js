@@ -1,8 +1,32 @@
 // ============================================================================
 //  COMPORTEMENTS UI (module) — à appeler APRÈS l'injection du contenu dynamique
-//  Exporte : initScrollReveal(), initLightbox()
+//  Exporte : initScrollReveal(), initLightbox(), initBackToTop()
 //  (La navigation Prev/Next est désormais générée par js/project-page.js)
 // ============================================================================
+
+// --- Bouton "remonter en haut" (apparaît après un peu de scroll) ------------
+export function initBackToTop() {
+  if (document.getElementById('back-to-top')) return; // déjà initialisé
+
+  const btn = document.createElement('button');
+  btn.id = 'back-to-top';
+  btn.type = 'button';
+  btn.setAttribute('aria-label', 'Remonter en haut de la page');
+  btn.title = 'Remonter en haut';
+  btn.innerHTML = `
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M12 20 Q 11.2 12 12 5 M 6 11 Q 9 7 12 4.5 Q 15 7 18 11"
+            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`;
+  document.body.appendChild(btn);
+
+  const toggle = () => btn.classList.toggle('show', window.scrollY > 400);
+  window.addEventListener('scroll', toggle, { passive: true });
+  toggle();
+
+  // 'instant' court-circuite le scroll-behavior:smooth global → remontée immédiate
+  btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'instant' }));
+}
 
 // --- Animations d'apparition au scroll --------------------------------------
 export function initScrollReveal() {

@@ -2,7 +2,7 @@
 //  PAGE D'ACCUEIL — génère la carte "Featured" + la grille depuis Firestore
 // ============================================================================
 import { fetchProjects, fetchSettings, esc } from "./data.js";
-import { initScrollReveal } from "../script.js";
+import { initScrollReveal, initBackToTop } from "../script.js";
 
 function tagSpan(tag) {
   const type = esc(tag.type || "tool-skill");
@@ -132,3 +132,4 @@ async function render() {
 
 render();
 renderSiteExtras();
+initBackToTop();
