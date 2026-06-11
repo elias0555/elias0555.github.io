@@ -12,20 +12,21 @@
 </head>
 <body>
 
+    <!-- Gribouillis décoratifs — fixés au fond de la page, ils se baladent même au scroll -->
+    <div class="doodles" aria-hidden="true">
+        <svg class="doodle d1" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M20 3 L24 15 L37 15 L26 23 L30 36 L20 28 L10 36 L14 23 L3 15 L16 15 Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/></svg>
+        <svg class="doodle d2" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M21 19 a4 4 0 1 1 -4 4 a8 8 0 1 1 8 -8 a13 13 0 1 1 -13 13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+        <svg class="doodle d3" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M4 32 Q 16 8 34 13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M27 8 L35 13 L29 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+
     <!-- Header with Navigation -->
     <header>
-        <!-- Gribouillis décoratifs flottants -->
-        <div class="doodles" aria-hidden="true">
-            <svg class="doodle d1" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M20 3 L24 15 L37 15 L26 23 L30 36 L20 28 L10 36 L14 23 L3 15 L16 15 Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/></svg>
-            <svg class="doodle d2" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M21 19 a4 4 0 1 1 -4 4 a8 8 0 1 1 8 -8 a13 13 0 1 1 -13 13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
-            <svg class="doodle d3" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M4 32 Q 16 8 34 13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M27 8 L35 13 L29 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
         <nav>
             <ul>
                 <li><a href="index.html">Home</a></li>
                 <li><a href="#project-overview">Overview</a></li>
-                <li><a href="#team">Team</a></li>
                 <li><a href="#technical-details">Technical Details</a></li>
+                <li><a href="#team">Team</a></li>
                 <li><a href="#gallery">Gallery</a></li>
             </ul>
         </nav>
@@ -41,12 +42,6 @@
         <p id="proj-overview"></p>
     </section>
 
-    <!-- Team & Credits Section (masquée si pas de crédits) -->
-    <section id="team" hidden>
-        <h2>Team &amp; Credits</h2>
-        <div class="credits-list" id="proj-credits"></div>
-    </section>
-
     <!-- Video Preview Section (masquée si pas de vidéo) -->
     <section id="video-preview" hidden>
         <h2>Gameplay Video</h2>
@@ -58,6 +53,12 @@
     <section id="technical-details" hidden>
         <h2>Technical Details</h2>
         <div id="proj-features"></div>
+    </section>
+
+    <!-- Team & Credits Section (masquée si pas de crédits) -->
+    <section id="team" hidden>
+        <h2>Team &amp; Credits</h2>
+        <div class="credits-list" id="proj-credits"></div>
     </section>
 
     <!-- Gallery Section (masquée si pas d'images) -->

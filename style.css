@@ -114,9 +114,13 @@ body::before {
     50% { border-radius: 45% 55% 48% 52% / 52% 48% 55% 45%; }
     75% { border-radius: 52% 48% 55% 45% / 48% 52% 45% 55%; }
 }
-@keyframes floaty {
-    from { transform: translateY(-6px) rotate(-4deg); }
-    to   { transform: translateY(8px) rotate(5deg); }
+/* Balade lente des doodles dans le fond (boucle fermée, amplitude en vw/vh) */
+@keyframes wander {
+    0%   { transform: translate(0, 0) rotate(-5deg); }
+    25%  { transform: translate(5vw, 9vh) rotate(7deg); }
+    50%  { transform: translate(-3vw, 16vh) rotate(-8deg); }
+    75%  { transform: translate(-6vw, 5vh) rotate(5deg); }
+    100% { transform: translate(0, 0) rotate(-5deg); }
 }
 @keyframes draw-line {
     from { clip-path: inset(0 100% 0 0); }
@@ -199,23 +203,27 @@ nav a::after {
 nav a:hover { color: var(--blue); transform: rotate(-1.5deg); }
 nav a:hover::after { clip-path: inset(0 0 0 0); }
 
-/* Doodles décoratifs flottants (SVG inline dans le HTML) */
-.doodles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+/* Doodles décoratifs (SVG inline dans le HTML) — fixés au viewport, ils
+   restent visibles au scroll et se baladent lentement dans le fond.
+   Positionnés à ≥10% des bords pour ne jamais être coupés en se déplaçant. */
+.doodles { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: -1; }
 .doodle {
-    position: absolute; opacity: 0.55;
-    animation: floaty 6s ease-in-out infinite alternate;
+    position: absolute; opacity: 0.45;
+    animation: wander 44s ease-in-out infinite;
 }
-.doodle.d1 { top: 14%; left: 6%; width: 46px; color: var(--blue); }
-.doodle.d2 { top: 20%; right: 7%; width: 52px; color: var(--red); animation-delay: -1.6s; animation-duration: 7s; }
-.doodle.d3 { bottom: 16%; left: 11%; width: 54px; color: var(--green); animation-delay: -3s; animation-duration: 8s; }
-.doodle.d4 { bottom: 24%; right: 12%; width: 42px; color: var(--purple); animation-delay: -4.2s; }
-.doodle.d5 { top: 52%; left: 22%; width: 36px; color: var(--pencil); animation-delay: -2.4s; animation-duration: 9s; }
+.doodle.d1 { top: 12%; left: 10%; width: 46px; color: var(--blue); }
+.doodle.d2 { top: 16%; right: 12%; width: 52px; color: var(--red); animation-delay: -14s; animation-duration: 56s; animation-direction: reverse; }
+.doodle.d3 { bottom: 22%; left: 12%; width: 54px; color: var(--green); animation-delay: -26s; animation-duration: 48s; }
+.doodle.d4 { bottom: 18%; right: 13%; width: 42px; color: var(--purple); animation-delay: -34s; animation-duration: 62s; animation-direction: reverse; }
+.doodle.d5 { top: 48%; left: 34%; width: 36px; color: var(--pencil); animation-delay: -8s; animation-duration: 68s; }
 
 /* --- SECTIONS & CARDS --- */
 section { padding: 75px 20px; max-width: var(--max-width); margin: 0 auto; text-align: center; }
 #project-overview p, #technical-details p { max-width: 800px; margin: 0 auto 2rem auto; line-height: 1.8; }
 
-.project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 34px; padding: 20px 0; }
+/* auto-fill (et non auto-fit) : un groupe avec un seul projet garde une carte
+   de la même largeur que les autres au lieu de s'étirer sur toute la ligne */
+.project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 34px; padding: 20px 0; justify-content: center; }
 .project-link { display: block; color: inherit; }
 
 /* Carte projet = feuille de carnet avec photo "polaroid" scotchée */
@@ -268,10 +276,13 @@ section { padding: 75px 20px; max-width: var(--max-width); margin: 0 auto; text-
     margin: 24px 0 24px 24px;
     transform: rotate(-1.5deg);
 }
+/* Le scotch se cale au-dessus de la photo (à gauche), pas au centre de la carte */
+#featured-container .project::before { left: 26.5%; }
 #featured-container .project-content { width: 52%; justify-content: center; }
 @media (max-width: 768px) {
     #featured-container .project { flex-direction: column; }
     #featured-container .project img { width: calc(100% - 44px); height: 250px; margin: 24px auto 0; }
+    #featured-container .project::before { left: 50%; }
     #featured-container .project-content { width: 100%; }
 }
 
@@ -569,11 +580,11 @@ section#video-preview video:hover { box-shadow: var(--shadow-glow); }
     #project-nav-container { flex-direction: column; }
     .nav-card { text-align: center !important; justify-content: center !important; }
     .doodle.d4, .doodle.d5 { display: none; }
-    /* Sur mobile, les doodles se rangent en haut au centre / à droite
+    /* Sur mobile : moins de doodles, plus petits, loin des bords
        pour ne gêner ni la nav ni le menu burger */
-    .doodle.d1 { top: 12px; left: 44%; width: 30px; }
-    .doodle.d2 { top: 16px; right: 5%; width: 34px; }
-    .doodle.d3 { bottom: 6%; left: 6%; width: 40px; }
+    .doodle.d1 { top: 10%; left: 14%; width: 30px; }
+    .doodle.d2 { top: 14%; right: 16%; width: 34px; }
+    .doodle.d3 { bottom: 14%; left: 14%; width: 40px; }
     .burger-btn { width: 48px; height: 48px; }
     #back-to-top { bottom: 16px; right: 16px; width: 48px; height: 48px; }
     section { padding: 60px 16px; }

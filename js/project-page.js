@@ -112,9 +112,15 @@ function initProjectMenu(projects, currentSlug) {
   menu.innerHTML = projectMenuHTML(projects, currentSlug);
   document.body.appendChild(menu);
 
-  // Sur tactile il n'y a pas de hover : le bouton ouvre/ferme le panneau
+  // Le survol épingle le panneau ouvert (il ne se referme pas quand la souris
+  // s'en va) ; fermeture par clic ailleurs, Échap, ou re-clic sur le bouton.
+  // Sur tactile il n'y a pas de hover : le bouton ouvre/ferme le panneau.
   const btn = menu.querySelector(".burger-btn");
   const close = () => { menu.classList.remove("open"); btn.setAttribute("aria-expanded", "false"); };
+  menu.addEventListener("mouseenter", () => {
+    menu.classList.add("open");
+    btn.setAttribute("aria-expanded", "true");
+  });
   btn.addEventListener("click", () => {
     const open = menu.classList.toggle("open");
     btn.setAttribute("aria-expanded", String(open));
