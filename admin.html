@@ -44,15 +44,18 @@
             <!-- Liste des projets -->
             <aside class="admin-sidebar">
                 <div class="sidebar-head">
-                    <h2>Projets</h2>
+                    <h2 id="projects-heading">Projets</h2>
                     <button id="new-btn" class="btn btn-primary btn-sm">+ Nouveau</button>
                 </div>
                 <button id="settings-btn" class="btn btn-ghost btn-sm btn-block">
                     ⚙ Réglages du site
                 </button>
-                <button id="seed-btn" class="btn btn-ghost btn-sm btn-block">
+                <!-- Import des projets de base : caché (la base est déjà peuplée).
+                     Réafficher en retirant l'attribut hidden si besoin de tout réimporter. -->
+                <button id="seed-btn" class="btn btn-ghost btn-sm btn-block" hidden>
                     ⬇ Importer mes projets existants
                 </button>
+                <p class="reorder-hint" id="reorder-hint">↕ Glisse les projets pour changer leur ordre d'affichage.</p>
                 <ul id="project-list" class="project-list-admin"></ul>
             </aside>
 
@@ -69,6 +72,7 @@
 
                     <p id="form-status" class="form-status"></p>
 
+                    <h3 class="form-section">📝 Infos principales</h3>
                     <!-- Champs principaux -->
                     <div class="form-grid">
                         <label class="field">
@@ -106,6 +110,7 @@
                         </label>
                     </div>
 
+                    <h3 class="form-section">🏷 Tags &amp; points clés</h3>
                     <!-- Tags / compétences -->
                     <div class="field">
                         <span>Compétences / Tags</span>
@@ -129,6 +134,7 @@
                         <textarea id="f-bullets" rows="3" placeholder="Advanced Level Design&#10;Custom collision logic"></textarea>
                     </label>
 
+                    <h3 class="form-section">🖼 Miniature &amp; description</h3>
                     <!-- Miniature -->
                     <div class="field">
                         <span>Miniature (image de la carte) *</span>
@@ -156,6 +162,7 @@
                         <div id="credits-container" class="features-container"></div>
                     </div>
 
+                    <h3 class="form-section">🔗 Vidéo &amp; liens</h3>
                     <!-- Vidéo YouTube -->
                     <label class="field">
                         <span>Vidéo YouTube (lien ou ID)</span>
@@ -174,6 +181,7 @@
                         </label>
                     </div>
 
+                    <h3 class="form-section">🛠 Détails techniques &amp; galerie</h3>
                     <!-- Détails techniques (features) -->
                     <div class="field">
                         <div class="field-head">
@@ -193,17 +201,13 @@
                         <div id="gallery-preview" class="gallery-preview"></div>
                     </div>
 
+                    <h3 class="form-section">⚙ Options</h3>
                     <!-- Options -->
-                    <div class="form-grid">
-                        <label class="field field-inline">
-                            <input type="checkbox" id="f-featured">
-                            <span>Projet mis en avant (Featured)</span>
-                        </label>
-                        <label class="field">
-                            <span>Ordre d'affichage</span>
-                            <input type="number" id="f-order" value="0" min="0">
-                        </label>
-                    </div>
+                    <label class="field field-inline featured-field">
+                        <input type="checkbox" id="f-featured">
+                        <span>Projet mis en avant (Featured) — épinglé en tête de l'accueil</span>
+                    </label>
+                    <p class="field-hint">L'ordre d'affichage se règle en glissant les projets dans la liste de gauche.</p>
 
                     <div class="form-footer">
                         <button type="button" id="cancel-btn" class="btn btn-ghost btn-sm">Annuler</button>

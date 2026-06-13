@@ -37,6 +37,7 @@ let features = [];             // [{heading, text, bullets, media}] — media: {
 let credits = [];              // [{role, names}] — names: "Elias - Yoan, Ena…"
 let thumbItem = null;          // {url} | {file, preview} | null
 let galleryItems = [];         // [{url} | {file, preview}]
+let dragSrcIndex = null;       // index de l'élément en cours de glisser (réordonnancement)
 
 // ---------------------------------------------------------------------------
 //  RACCOURCIS DOM
@@ -120,23 +121,88 @@ async function loadProjects() {
 function renderProjectList() {
   const ul = $("project-list");
   ul.innerHTML = "";
+
+  const heading = $("projects-heading");
+  if (heading) heading.textContent = allProjects.length ? `Projets (${allProjects.length})` : "Projets";
+  const hint = $("reorder-hint");
+  if (hint) hint.hidden = allProjects.length < 2;
+
   if (allProjects.length === 0) {
     ul.innerHTML = `<li class="empty-hint">Aucun projet. Importe les existants ou crée-en un.</li>`;
     return;
   }
-  allProjects.forEach(p => {
+  allProjects.forEach((p, index) => {
     const li = document.createElement("li");
     li.className = "project-list-item" + (p.id === editingId ? " active" : "");
-    const star = p.featured ? "★ " : "";
+    li.draggable = true;
+    li.dataset.index = index;
+    const star = p.featured ? `<span class="pli-star" title="Mis en avant">★</span>` : "";
+    const cat = p.category === "perso" ? "perso" : "school";
+    const catLabel = cat === "perso" ? "Perso" : "Scolaire";
     li.innerHTML = `
-      <img src="${p.thumbnail || ""}" alt="" onerror="this.style.visibility='hidden'">
+      <span class="drag-handle" aria-hidden="true" title="Glisser pour réordonner">⠿</span>
+      <img src="${p.thumbnail || ""}" alt="" draggable="false" onerror="this.style.visibility='hidden'">
       <div class="pli-meta">
         <strong>${star}${escapeText(p.title)}</strong>
         <small>${escapeText(p.slug)}</small>
-      </div>`;
+      </div>
+      <span class="pli-cat ${cat}">${catLabel}</span>`;
+
     li.addEventListener("click", () => loadIntoForm(p));
+
+    // Glisser-déposer natif pour réordonner (remplace le champ "Ordre")
+    li.addEventListener("dragstart", (e) => {
+      dragSrcIndex = index;
+      li.classList.add("dragging");
+      e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.setData("text/plain", String(index)); // requis par Firefox
+    });
+    li.addEventListener("dragend", () => {
+      li.classList.remove("dragging");
+      document.querySelectorAll(".project-list-item.drag-over").forEach(x => x.classList.remove("drag-over"));
+    });
+    li.addEventListener("dragover", (e) => { e.preventDefault(); e.dataTransfer.dropEffect = "move"; });
+    li.addEventListener("dragenter", (e) => { e.preventDefault(); if (index !== dragSrcIndex) li.classList.add("drag-over"); });
+    li.addEventListener("dragleave", () => li.classList.remove("drag-over"));
+    li.addEventListener("drop", (e) => {
+      e.preventDefault();
+      li.classList.remove("drag-over");
+      const from = dragSrcIndex, to = index;
+      dragSrcIndex = null;
+      if (from === null || from === to) return;
+      const [moved] = allProjects.splice(from, 1);
+      allProjects.splice(to, 0, moved);
+      renderProjectList();
+      persistOrder();
+    });
+
     ul.appendChild(li);
   });
+}
+
+// Sauvegarde l'ordre courant de la liste : écrit `order` = position pour les
+// projets dont la position a changé (réordonnancement par glisser-déposer).
+async function persistOrder() {
+  const hint = $("reorder-hint");
+  const updates = [];
+  allProjects.forEach((p, i) => {
+    if (p.order !== i) {
+      p.order = i;
+      updates.push(setDoc(doc(db, "projects", p.id), { order: i, updatedAt: serverTimestamp() }, { merge: true }));
+    }
+  });
+  if (!updates.length) return;
+  if (hint) { hint.hidden = false; hint.textContent = "Enregistrement de l'ordre…"; }
+  try {
+    await Promise.all(updates);
+    if (hint) {
+      hint.textContent = "✅ Ordre enregistré.";
+      setTimeout(() => { hint.textContent = "↕ Glisse les projets pour changer leur ordre d'affichage."; }, 1800);
+    }
+  } catch (err) {
+    console.error(err);
+    if (hint) hint.textContent = "⚠️ Erreur lors de la sauvegarde de l'ordre.";
+  }
 }
 
 // ===========================================================================
@@ -391,7 +457,6 @@ function loadIntoForm(p) {
   $("f-itch").value = p.itchUrl || "";
   $("f-steam").value = p.steamUrl || "";
   $("f-featured").checked = !!p.featured;
-  $("f-order").value = p.order ?? 0;
 
   selectedTags = (p.tags || []).map(t => ({ label: t.label, type: t.type }));
   features = (p.features || []).map(f => ({
@@ -422,6 +487,11 @@ $("project-form").addEventListener("submit", async (e) => {
   if (allProjects.some(p => p.slug === slug && p.id !== editingId)) {
     status(`Le slug "${slug}" est déjà utilisé.`, true); return;
   }
+
+  // Ordre : on conserve l'ordre existant en édition ; un nouveau projet va en fin de liste
+  // (le réordonnancement se fait ensuite par glisser-déposer dans la liste de gauche).
+  const existingForOrder = allProjects.find(p => p.id === editingId);
+  const orderValue = existingForOrder ? (existingForOrder.order ?? 0) : allProjects.length;
 
   showLoading("Enregistrement…");
   try {
@@ -465,7 +535,7 @@ $("project-form").addEventListener("submit", async (e) => {
       features: cleanFeatures,
       gallery,
       featured: $("f-featured").checked,
-      order: Number($("f-order").value) || 0,
+      order: orderValue,
       updatedAt: serverTimestamp()
     };
 
