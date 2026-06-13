@@ -49,10 +49,23 @@ export function initScrollReveal() {
 }
 
 // --- Lightbox de galerie -----------------------------------------------------
-export function initLightbox() {
-  const galleryLinks = document.querySelectorAll('.project-gallery a');
-  if (galleryLinks.length === 0) return;
-  if (document.getElementById('lightbox')) return; // déjà initialisé
+// Accepte une liste de sources d'images et renvoie une fonction open(index)
+// pour l'ouvrir par programme (depuis le carrousel média de la page projet).
+// Rétro-compat : sans argument, scanne les liens `.project-gallery a` présents.
+export function initLightbox(images) {
+  const resolveSrc = (link) => {
+    let src = link.getAttribute('href');
+    if (src && src.startsWith('#')) {
+      const imgInside = link.querySelector('img');
+      if (imgInside) src = imgInside.src;
+    }
+    return src;
+  };
+
+  const galleryLinks = [...document.querySelectorAll('.project-gallery a')];
+  const srcs = (images && images.length) ? images.slice() : galleryLinks.map(resolveSrc);
+  if (srcs.length === 0) return null;
+  if (document.getElementById('lightbox')) return null; // déjà initialisé
 
   const lightbox = document.createElement('div');
   lightbox.id = 'lightbox';
@@ -73,19 +86,10 @@ export function initLightbox() {
   const thumbContainer = document.querySelector('.lightbox-thumbnails');
   let currentImgIndex = 0;
 
-  const resolveSrc = (link) => {
-    let src = link.getAttribute('href');
-    if (src && src.startsWith('#')) {
-      const imgInside = link.querySelector('img');
-      if (imgInside) src = imgInside.src;
-    }
-    return src;
-  };
-
   // Génère les miniatures
-  galleryLinks.forEach((link, index) => {
+  srcs.forEach((src, index) => {
     const thumb = document.createElement('img');
-    thumb.src = resolveSrc(link);
+    thumb.src = src;
     thumb.className = 'thumb';
     thumb.loading = 'lazy';
     thumb.dataset.index = index;
@@ -97,15 +101,13 @@ export function initLightbox() {
   });
 
   // Précharge TOUTES les images plein écran → navigation instantanée (plus de flash)
-  galleryLinks.forEach(link => { const im = new Image(); im.src = resolveSrc(link); });
+  srcs.forEach(src => { const im = new Image(); im.src = src; });
 
-  // Ouverture
+  const open = (index) => { lightbox.classList.add('active'); updateImage(index); };
+
+  // Rétro-compat : ouvre au clic si des liens de galerie existent dans la page
   galleryLinks.forEach((link, index) => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      lightbox.classList.add('active');
-      updateImage(index);
-    });
+    link.addEventListener('click', (e) => { e.preventDefault(); open(index); });
   });
 
   // Fermeture
@@ -117,24 +119,23 @@ export function initLightbox() {
   });
 
   const updateImage = (index) => {
-    if (index < 0) index = galleryLinks.length - 1;
-    if (index >= galleryLinks.length) index = 0;
+    if (index < 0) index = srcs.length - 1;
+    if (index >= srcs.length) index = 0;
     currentImgIndex = index;
 
     // Échange immédiat (les images sont préchargées → instantané)
-    lightboxImg.src = resolveSrc(galleryLinks[index]);
+    lightboxImg.src = srcs[index];
 
     // Petit "pop" non bloquant (relance l'animation à chaque switch)
     lightboxImg.classList.remove('swap');
     void lightboxImg.offsetWidth;            // force un reflow
     lightboxImg.classList.add('swap');
 
-    const originalImg = galleryLinks[index].querySelector('img');
-    captionText.textContent = originalImg ? originalImg.alt : "";
+    captionText.textContent = `Screenshot ${index + 1} / ${srcs.length}`;
 
     document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
     thumbContainer.children[index].classList.add('active');
-    thumbContainer.children[index].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    thumbContainer.children[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
   };
 
   document.getElementById('prev-btn').addEventListener('click', (e) => {
@@ -152,4 +153,6 @@ export function initLightbox() {
     if (e.key === 'ArrowLeft') updateImage(currentImgIndex - 1);
     if (e.key === 'ArrowRight') updateImage(currentImgIndex + 1);
   });
+
+  return open;
 }

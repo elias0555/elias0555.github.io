@@ -224,11 +224,39 @@ nav a:hover::after { clip-path: inset(0 0 0 0); }
 
 /* --- SECTIONS & CARDS --- */
 section { padding: 75px 20px; max-width: var(--max-width); margin: 0 auto; text-align: center; }
-#project-overview p, #technical-details p { max-width: 800px; margin: 0 auto 2rem auto; line-height: 1.8; }
+#technical-details p { max-width: 800px; margin: 0 auto 2rem auto; line-height: 1.8; }
+
+/* --- ABOUT HERO (accueil : présentation principale en haut de page) --- */
+.about-hero { padding-top: 35px; }
+.about-card {
+    display: flex; align-items: center; gap: 38px;
+    max-width: 880px; margin: 0 auto; text-align: left;
+    background: var(--paper-card); border: 2px solid var(--ink);
+    border-radius: var(--sketch-radius); box-shadow: var(--shadow-md);
+    padding: 36px 42px; position: relative;
+}
+.about-portrait {
+    flex: 0 0 auto; width: 130px; height: 130px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--yellow); border: 2.5px solid var(--ink);
+    border-radius: 48% 52% 45% 55% / 55% 45% 52% 48%;
+    box-shadow: var(--shadow-sm); transform: rotate(-3deg);
+}
+.about-monogram { font-family: var(--font-hand); font-weight: 700; font-size: 2.7rem; color: var(--ink); letter-spacing: 1px; }
+.about-body { flex: 1 1 auto; }
+.about-body h2 { margin-bottom: 14px; }
+.about-lead { font-size: 1.15rem; line-height: 1.7; color: var(--ink-soft); margin: 0 0 22px; }
+.about-actions { display: flex; flex-wrap: wrap; gap: 14px; }
+@media (max-width: 680px) {
+    .about-card { flex-direction: column; text-align: center; padding: 30px 24px; gap: 24px; }
+    .about-body { text-align: center; }
+    .about-actions { justify-content: center; }
+}
 
 /* auto-fill (et non auto-fit) : un groupe avec un seul projet garde une carte
-   de la même largeur que les autres au lieu de s'étirer sur toute la ligne */
-.project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 34px; padding: 20px 0; justify-content: center; }
+   de la même largeur que les autres au lieu de s'étirer sur toute la ligne.
+   Cartes condensées : minmax plus petit + gap resserré → fiches plus compactes. */
+.project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 22px; padding: 14px 0; justify-content: center; }
 .project-link { display: block; color: inherit; }
 
 /* Carte projet = feuille de carnet avec photo "polaroid" scotchée */
@@ -243,8 +271,8 @@ section { padding: 75px 20px; max-width: var(--max-width); margin: 0 auto; text-
 }
 /* Morceau de scotch en haut de la photo */
 .project::before {
-    content: ''; position: absolute; top: 10px; left: 50%;
-    width: 100px; height: 26px;
+    content: ''; position: absolute; top: 8px; left: 50%;
+    width: 76px; height: 20px;
     background: rgba(255, 224, 130, 0.65);
     border-left: 2px dashed rgba(47, 44, 38, 0.2);
     border-right: 2px dashed rgba(47, 44, 38, 0.2);
@@ -259,17 +287,21 @@ section { padding: 75px 20px; max-width: var(--max-width); margin: 0 auto; text-
     z-index: 2;
 }
 .project img {
-    width: calc(100% - 44px); height: 210px; object-fit: cover;
-    margin: 24px auto 0;
-    border: 5px solid #fff; outline: 2px solid var(--ink); border-radius: 3px;
+    width: calc(100% - 36px); height: 148px; object-fit: cover;
+    margin: 16px auto 0;
+    border: 4px solid #fff; outline: 2px solid var(--ink); border-radius: 3px;
     transform: rotate(-1.2deg);
     box-shadow: 3px 4px 0 rgba(47, 44, 38, 0.12);
     transition: transform 0.35s ease;
 }
 .project:hover img { transform: rotate(0.3deg) scale(1.015); }
-.project-content { padding: 22px 26px 26px; flex-grow: 1; display: flex; flex-direction: column; }
-.project h3 { margin: 0 0 10px; color: var(--ink); font-size: 1.85rem; }
-.project ul { padding-left: 22px; margin-top: auto; color: var(--ink-soft); font-size: 1rem; }
+.project-content { padding: 14px 18px 18px; flex-grow: 1; display: flex; flex-direction: column; }
+.project h3 { margin: 0 0 6px; color: var(--ink); font-size: 1.4rem; line-height: 1.15; }
+/* Conteneur de tags (1er div sous le titre) : étiquettes plus petites */
+.project-content > div { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 6px; }
+.project-content > div span { font-size: 0.74rem; padding: 1px 9px; margin: 0; box-shadow: none; border-width: 1.5px; }
+.project-content > p { font-size: 0.9rem; margin: 0 0 8px; line-height: 1.35; }
+.project ul { padding-left: 18px; margin: auto 0 0; color: var(--ink-soft); font-size: 0.85rem; line-height: 1.4; }
 .project ul li::marker { content: '✎ '; color: var(--blue); }
 
 /* Featured Project (carte large en tête de la section Projects) */
@@ -332,14 +364,72 @@ section { padding: 75px 20px; max-width: var(--max-width); margin: 0 auto; text-
 .tool-skill { background-color: var(--skill-tool); }
 .skills-list li:hover { transform: rotate(0deg) scale(1.12); box-shadow: 4px 5px 0 rgba(47, 44, 38, 0.18); }
 
-/* Video */
-section#video-preview video {
-    max-width: 850px; width: 100%; margin: 0 auto;
+/* --- PAGE PROJET : HERO façon Steam ---
+   Média (vidéo / screenshot) à gauche, colonne info à droite
+   (capsule + description + tags + boutons jouer). Bascule en 1 colonne sur mobile. */
+.steam-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.7fr) minmax(250px, 1fr);
+    gap: 30px; align-items: start; text-align: left;
+}
+.hero-media { align-self: start; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+
+/* Grande scène : vidéo ou screenshot actif. Ratio 16:9 fixe → pas de saut de
+   layout quand on change de média. Les enfants remplissent la scène. */
+.media-stage {
+    position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden;
+    background: #000;
     border: 2px solid var(--ink); border-radius: var(--sketch-radius-sm);
     box-shadow: var(--shadow-md);
-    transition: box-shadow 0.3s;
 }
-section#video-preview video:hover { box-shadow: var(--shadow-glow); }
+.media-stage > * { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; border: 0; border-radius: 0; box-shadow: none; }
+.media-stage img { object-fit: contain; }
+.media-stage video { object-fit: contain; background: #000; }
+.media-stage.is-image .stage-img { cursor: zoom-in; }
+.media-stage .video-embed { aspect-ratio: auto; }
+.media-stage .video-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* Bande de miniatures (slider) sous la scène */
+.media-strip { display: flex; align-items: center; gap: 8px; }
+.strip-track { display: flex; gap: 8px; overflow-x: auto; scroll-behavior: smooth; padding: 2px; flex: 1; min-width: 0; scrollbar-width: thin; }
+.strip-thumb {
+    position: relative; flex: 0 0 auto; width: 96px; height: 56px; padding: 0; cursor: pointer;
+    background: var(--paper-deep); border: 2px solid var(--ink); border-radius: 4px;
+    overflow: hidden; opacity: 0.55;
+    transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+.strip-thumb img { width: 100%; height: 100%; object-fit: cover; margin: 0; border-radius: 0; display: block; }
+.strip-thumb:hover { opacity: 0.9; transform: translateY(-2px); }
+.strip-thumb.active { opacity: 1; border-color: var(--blue); box-shadow: 2px 3px 0 rgba(59, 111, 209, 0.3); }
+.strip-thumb .play-ico {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 1.1rem; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6); background: rgba(0, 0, 0, 0.18);
+}
+.strip-arrow {
+    flex: 0 0 auto; width: 30px; height: 56px; padding: 0; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--paper-card); color: var(--ink);
+    border: 2px solid var(--ink); border-radius: var(--sketch-radius-sm);
+    box-shadow: 2px 2px 0 rgba(47, 44, 38, 0.16); font-size: 1rem;
+    transition: background 0.2s, transform 0.15s;
+}
+.strip-arrow:hover { background: var(--yellow); }
+.strip-arrow:active { transform: translateY(1px); }
+.hero-side { display: flex; flex-direction: column; gap: 16px; }
+.hero-capsule {
+    border: 4px solid #fff; outline: 2px solid var(--ink); border-radius: 3px;
+    box-shadow: var(--shadow-sm); overflow: hidden; transform: rotate(-1deg);
+}
+.hero-capsule img { width: 100%; display: block; margin: 0; border-radius: 0; }
+.hero-side .proj-meta { justify-content: flex-start; margin: 0; }
+.hero-overview { margin: 0; line-height: 1.7; color: var(--ink-soft); }
+.hero-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.hero-tags span { margin: 0; }
+.hero-side .proj-links { justify-content: flex-start; margin: 2px 0 0; }
+@media (max-width: 860px) {
+    .steam-hero { grid-template-columns: 1fr; gap: 22px; }
+    .hero-capsule { max-width: 340px; }
+}
 
 /* --- PROJECT NAV (Footer Navigation) --- */
 #project-nav-container {

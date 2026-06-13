@@ -6,6 +6,11 @@ import { initScrollReveal, initLightbox, initBackToTop } from "../script.js";
 
 const slug = new URLSearchParams(location.search).get("p");
 
+function tagSpan(tag) {
+  const type = esc(tag.type || "tool-skill");
+  return `<span class="${type}">${esc(tag.label)}</span>`;
+}
+
 function featureBlock(f) {
   const bullets = (f.bullets || []).filter(Boolean);
   // Média d'illustration (GIF ou image) affiché dans le bloc, ouvrable en grand
@@ -58,7 +63,7 @@ function videoHTML(project) {
     </div>`;
   }
   if (project.videoUrl) {
-    return `<video controls style="max-width:100%; box-shadow: var(--shadow-md);">
+    return `<video controls>
       <source src="${esc(project.videoUrl)}" type="video/mp4">
       Your browser does not support the video tag.
     </video>`;
@@ -66,10 +71,71 @@ function videoHTML(project) {
   return "";
 }
 
-function galleryHTML(images) {
-  return (images || []).map((src, i) =>
-    `<a href="${esc(src)}"><img src="${esc(src)}" alt="Screenshot ${i + 1}"></a>`
-  ).join("");
+// Carrousel média façon Steam : grande scène (vidéo ou screenshot actif) + bande
+// de miniatures dessous (slider). Cliquer une miniature change la scène ; les
+// flèches font défiler. Cliquer un screenshot affiché ouvre la lightbox.
+function buildMediaCarousel(root, { title, videoHtml, images, fallbackImage, openLightbox }) {
+  if (!root) return;
+
+  // Items : vidéo (si dispo) en tête, puis screenshots ; sinon la vignette en secours
+  const items = [];
+  if (videoHtml) items.push({ kind: "video" });
+  (images || []).forEach((src, i) => items.push({ kind: "image", src, index: i }));
+  if (!items.length && fallbackImage) items.push({ kind: "image", src: fallbackImage, index: -1 });
+  if (!items.length) return;
+
+  // Miniature de la scène vidéo : 1er screenshot ou la vignette
+  const videoThumb = (images && images[0]) || fallbackImage || "";
+
+  root.innerHTML = `
+    <div class="media-stage" id="media-stage"></div>
+    ${items.length > 1 ? `
+    <div class="media-strip">
+      <button type="button" class="strip-arrow prev" aria-label="Précédent">&#10094;</button>
+      <div class="strip-track" id="strip-track"></div>
+      <button type="button" class="strip-arrow next" aria-label="Suivant">&#10095;</button>
+    </div>` : ""}`;
+
+  const stage = root.querySelector("#media-stage");
+  const track = root.querySelector("#strip-track");
+  let active = 0;
+
+  const showStage = (i) => {
+    active = (i + items.length) % items.length;
+    const it = items[active];
+    if (it.kind === "video") {
+      stage.classList.remove("is-image");
+      stage.innerHTML = videoHtml;
+    } else {
+      stage.classList.add("is-image");
+      stage.innerHTML = `<img class="stage-img" src="${esc(it.src)}" alt="${esc(title)} screenshot">`;
+      if (openLightbox && it.index >= 0) {
+        stage.querySelector(".stage-img").addEventListener("click", () => openLightbox(it.index));
+      }
+    }
+    if (track) {
+      [...track.children].forEach((c, idx) => c.classList.toggle("active", idx === active));
+      track.children[active]?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+    }
+  };
+
+  if (track) {
+    track.innerHTML = items.map((it, i) => it.kind === "video"
+      ? `<button type="button" class="strip-thumb is-video" data-i="${i}" aria-label="Vidéo">
+           <img src="${esc(videoThumb)}" alt="" loading="lazy"><span class="play-ico" aria-hidden="true">▶</span>
+         </button>`
+      : `<button type="button" class="strip-thumb" data-i="${i}" aria-label="Capture ${it.index + 1}">
+           <img src="${esc(it.src)}" alt="" loading="lazy">
+         </button>`).join("");
+    track.addEventListener("click", (e) => {
+      const b = e.target.closest(".strip-thumb");
+      if (b) showStage(Number(b.dataset.i));
+    });
+    root.querySelector(".strip-arrow.prev").addEventListener("click", () => showStage(active - 1));
+    root.querySelector(".strip-arrow.next").addEventListener("click", () => showStage(active + 1));
+  }
+
+  showStage(0);
 }
 
 // Menu burger fixe en haut à gauche : au survol (ou au clic sur tactile),
@@ -211,12 +277,31 @@ async function render() {
     dropNavLink("#team");
   }
 
-  // Vidéo
-  const video = videoHTML(project);
-  if (video) {
-    document.getElementById("proj-video").innerHTML = video;
-    document.getElementById("video-preview").hidden = false;
+  // Capsule (vignette) à droite — masquée si elle ferait doublon avec le média
+  const capsuleEl = document.getElementById("proj-capsule");
+  const gallery = (project.gallery || []).filter(Boolean);
+  const videoHtml = videoHTML(project);
+  if (capsuleEl) {
+    if (project.thumbnail && (videoHtml || gallery.length)) {
+      capsuleEl.innerHTML = `<img src="${esc(project.thumbnail)}" alt="${esc(project.title)}">`;
+    } else {
+      capsuleEl.hidden = true;
+    }
   }
+  // Tags techno sous la description
+  const tagsEl = document.getElementById("proj-tags");
+  if (tagsEl) {
+    const tags = project.tags || [];
+    if (tags.length) tagsEl.innerHTML = tags.map(tagSpan).join("");
+    else tagsEl.hidden = true;
+  }
+  // Carrousel média (façon Steam) : grande scène + bande de miniatures (slider).
+  // La lightbox plein écran réutilise la liste des screenshots.
+  const openLightbox = initLightbox(gallery);
+  buildMediaCarousel(document.getElementById("proj-media"), {
+    title: project.title, videoHtml, images: gallery,
+    fallbackImage: project.thumbnail, openLightbox
+  });
 
   // Détails techniques
   const features = (project.features || []).filter(f => f && f.heading);
@@ -225,14 +310,6 @@ async function render() {
     document.getElementById("technical-details").hidden = false;
   } else {
     dropNavLink("#technical-details");
-  }
-
-  // Galerie
-  if (project.gallery && project.gallery.length) {
-    document.getElementById("proj-gallery").innerHTML = galleryHTML(project.gallery);
-    document.getElementById("gallery").hidden = false;
-  } else {
-    dropNavLink("#gallery");
   }
 
   // Navigation Prev/Next (en boucle)
@@ -260,7 +337,6 @@ async function render() {
   }
 
   // Comportements UI (après injection du DOM)
-  initLightbox();
   initScrollReveal();
   initBackToTop();
 }

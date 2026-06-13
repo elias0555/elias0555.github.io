@@ -29,31 +29,29 @@
         <nav>
             <ul>
                 <li><a href="index.html">Home</a></li>
-                <li><a href="#project-overview">Overview</a></li>
+                <li><a href="#project-hero">Overview</a></li>
                 <li><a href="#technical-details">Technical Details</a></li>
                 <li><a href="#team">Team</a></li>
-                <li><a href="#gallery">Gallery</a></li>
             </ul>
         </nav>
         <h1 id="proj-title">Loading…</h1>
         <p id="proj-subtitle"></p>
-        <!-- Badges catégorie (Perso/Scolaire) + Game Jam, remplis par JS -->
-        <div id="proj-meta" class="proj-meta"></div>
-        <!-- Boutons "jouer" : itch.io / Steam (remplis par JS si renseignés) -->
-        <div id="proj-links" class="proj-links"></div>
     </header>
 
-    <!-- Project Overview Section -->
-    <section id="project-overview">
-        <h2>Project Overview</h2>
-        <p id="proj-overview"></p>
-    </section>
-
-    <!-- Video Preview Section (masquée si pas de vidéo) -->
-    <section id="video-preview" hidden>
-        <h2>Gameplay Video</h2>
-        <div id="proj-video"></div>
-        <p id="proj-video-caption"></p>
+    <!-- HERO façon Steam : média (vidéo/screenshot) à gauche, colonne info à droite
+         (capsule + description + tags + boutons jouer) — rempli par JS -->
+    <section id="project-hero" class="steam-hero">
+        <div class="hero-media" id="proj-media"></div>
+        <aside class="hero-side">
+            <div class="hero-capsule" id="proj-capsule"></div>
+            <!-- Badges catégorie (Perso/Scolaire) + Game Jam -->
+            <div id="proj-meta" class="proj-meta"></div>
+            <p id="proj-overview" class="hero-overview"></p>
+            <!-- Tags techno du projet -->
+            <div id="proj-tags" class="hero-tags"></div>
+            <!-- Boutons "jouer" : itch.io / Steam (si renseignés) -->
+            <div id="proj-links" class="proj-links"></div>
+        </aside>
     </section>
 
     <!-- Technical Details Section -->
@@ -66,12 +64,6 @@
     <section id="team" hidden>
         <h2>Team &amp; Credits</h2>
         <div class="credits-list" id="proj-credits"></div>
-    </section>
-
-    <!-- Gallery Section (masquée si pas d'images) -->
-    <section id="gallery" hidden>
-        <h2>Gallery</h2>
-        <div class="project-gallery" id="proj-gallery"></div>
     </section>
 
     <!-- Footer -->
