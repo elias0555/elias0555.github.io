@@ -6,6 +6,33 @@ import { initScrollReveal, initLightbox, initBackToTop } from "../script.js";
 
 const slug = new URLSearchParams(location.search).get("p");
 
+// Met à jour titre, description, Open Graph et canonical pour le projet ouvert
+// (partage sur les réseaux + indexation correcte de chaque page projet).
+function updateSeo({ title, description, image, url }) {
+  if (title) document.title = title;
+  const setMeta = (selector, value) => {
+    const el = document.querySelector(selector);
+    if (el && value) el.setAttribute("content", value);
+  };
+  setMeta('meta[name="description"]', description);
+  setMeta('meta[property="og:title"]', title);
+  setMeta('meta[property="og:description"]', description);
+  setMeta('meta[name="twitter:title"]', title);
+  setMeta('meta[name="twitter:description"]', description);
+  if (url) {
+    setMeta('meta[property="og:url"]', url);
+    const canonical = document.querySelector('link[rel="canonical"]');
+    if (canonical) canonical.setAttribute("href", url);
+  }
+  if (image) {
+    const abs = /^https?:\/\//.test(image)
+      ? image
+      : `https://elias0555.github.io/${image.replace(/^\/+/, "")}`;
+    setMeta('meta[property="og:image"]', abs);
+    setMeta('meta[name="twitter:image"]', abs);
+  }
+}
+
 function tagSpan(tag) {
   const type = esc(tag.type || "tool-skill");
   return `<span class="${type}">${esc(tag.label)}</span>`;
@@ -235,10 +262,17 @@ async function render() {
   }
 
   // En-tête + overview
-  document.title = `${project.title} - Project Details`;
   document.getElementById("proj-title").textContent = project.title;
   document.getElementById("proj-subtitle").textContent = project.subtitle || "";
   document.getElementById("proj-overview").textContent = project.overview || "";
+
+  // SEO : titre, description et Open Graph propres au projet ouvert
+  updateSeo({
+    title: `${project.title}${project.subtitle ? " — " + project.subtitle : ""} | Elias OSBORN SALINAS`,
+    description: project.overview || `${project.title}, a game project by Elias OSBORN SALINAS.`,
+    image: project.thumbnail || "",
+    url: `https://elias0555.github.io/project.html?p=${encodeURIComponent(project.slug || slug)}`
+  });
 
   // Badges méta : catégorie (Perso / Scolaire) + Game Jam
   const metaEl = document.getElementById("proj-meta");
