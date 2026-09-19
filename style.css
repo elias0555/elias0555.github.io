@@ -287,7 +287,7 @@ section { padding: 75px 20px; max-width: var(--max-width); margin: 0 auto; text-
     z-index: 2;
 }
 .project img {
-    width: calc(100% - 36px); height: 148px; object-fit: cover;
+    width: calc(100% - 36px); aspect-ratio: 16 / 9; height: auto; object-fit: cover;
     margin: 16px auto 0;
     border: 4px solid #fff; outline: 2px solid var(--ink); border-radius: 3px;
     transform: rotate(-1.2deg);
@@ -309,7 +309,7 @@ section { padding: 75px 20px; max-width: var(--max-width); margin: 0 auto; text-
     max-width: 900px; margin: 0 auto; flex-direction: row; align-items: stretch;
 }
 #featured-container .project img {
-    width: 48%; height: auto; max-height: 340px; align-self: center;
+    width: 48%; align-self: center;
     margin: 24px 0 24px 24px;
     transform: rotate(-1.5deg);
 }
@@ -318,7 +318,7 @@ section { padding: 75px 20px; max-width: var(--max-width); margin: 0 auto; text-
 #featured-container .project-content { width: 52%; justify-content: center; }
 @media (max-width: 768px) {
     #featured-container .project { flex-direction: column; }
-    #featured-container .project img { width: calc(100% - 44px); height: 250px; margin: 24px auto 0; }
+    #featured-container .project img { width: calc(100% - 44px); margin: 24px auto 0; }
     #featured-container .project::before { left: 50%; }
     #featured-container .project-content { width: 100%; }
 }
@@ -420,7 +420,7 @@ section { padding: 75px 20px; max-width: var(--max-width); margin: 0 auto; text-
     border: 4px solid #fff; outline: 2px solid var(--ink); border-radius: 3px;
     box-shadow: var(--shadow-sm); overflow: hidden; transform: rotate(-1deg);
 }
-.hero-capsule img { width: 100%; display: block; margin: 0; border-radius: 0; }
+.hero-capsule img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; margin: 0; border-radius: 0; }
 .hero-side .proj-meta { justify-content: flex-start; margin: 0; }
 .hero-overview { margin: 0; line-height: 1.7; color: var(--ink-soft); }
 .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; }
